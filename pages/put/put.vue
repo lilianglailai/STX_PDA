@@ -2,7 +2,7 @@
     <view class="router-box">
         <Navigation backTitle="提交"  ></Navigation>
         <view class="top-box">
-            <input
+           <uni-easyinput
                 :focus="true"
                 type="text"
                 placeholder="请输入或扫描客户单号"
@@ -31,18 +31,25 @@ export default {
         };
     },
     created: function (option) {
+       
          uni.$on("refresh", () => {
             this.number = ""
             this.$refs.list.getList()
         });
+        
+    },
+    onShow(){
         this.initScan();
         this.startScan();
-         
     },
-
+    onHide(){
+        this.stopScan();
+    },
     destroyed: function () {
+          
         /*页面退出时一定要卸载监听,否则下次进来时会重复，造成扫一次出2个以上的结果*/
         this.stopScan();
+     
         uni.$off("refresh");
     },
       onReachBottom() {
@@ -136,7 +143,7 @@ export default {
                 },
             }).then(
                 (res) => {
-                    if (res.result && res.result.channelName) {
+                    if (res.result ) {
                         let obj = {};
                         obj.scanCode = code;
                         obj.channelName = res.result.channelName;
@@ -149,15 +156,18 @@ export default {
                         }
                         uni.hideLoading();
                         this.$store.commit("setputObj",obj)
-                      
+                        this.stopScan();
                         uni.navigateTo({
-                            url:
-                                "/pages/putAdd/putAdd" 
-                               
+                            url:"/pages/putAdd/putAdd" 
                         });
                     } else {
+                        const innerAudioContext = uni.createInnerAudioContext();
+                    innerAudioContext.autoplay = true;
+                    innerAudioContext.src ="https://tts.baidu.com/text2audio.mp3?tex=%22%E5%8D%95%E5%8F%B7%E4%B8%8D%E5%AD%98%E5%9C%A8%22&cuid=baike&amp&lan=ZH&amp&ctp=1&amp&pdt=301&amp&vol=100&amp&rate=32&amp"
+                         
+                    innerAudioContext.onPlay(() => {});
                         uni.showToast({
-                            title: "此单号不存在",
+                            title: "此单号未在系统下单",
                             icon: "none",
                         });
                     }
@@ -175,11 +185,18 @@ export default {
 <style  lang='scss'>
 .top-box {
     position: relative;
-    input {
+    /deep/ .is-input-border{
+        border: unset !important;
+    }
+    /deep/ .uni-easyinput__content-input {
         height: 103rpx;
         background: #ffffff;
         font-size: 38rpx;
-        padding-left: 112.5rpx;
+       
+       
+    }
+    /deep/.content-clear-icon{
+         padding-right:  160rpx !important;
     }
     image {
         width: 71.88rpx;
