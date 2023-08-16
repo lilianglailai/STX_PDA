@@ -1,0 +1,59 @@
+ 
+ 
+.flex {
+    display: flex;
+
+}
+
+.flex1 {
+    flex: 1;
+    word-break: break-all;
+}
+
+.flex-a {
+    display: flex;
+    align-items: center;
+}
+
+.flex-c {
+    display: flex;
+    justify-content: center;
+}
+ 
+
+.margin-auto {
+    margin-left: auto;
+    margin-right: auto;
+} 
+
+body {
+    margin: 0 !important;
+    background: #FAFAFA;
+   
+}
+
+button {
+    border: unset;
+
+}
+ 
+ul {
+    list-style: none;
+}
+.tips_box {
+	width: 100%;
+	text-align: center;
+	line-height: 300rpx;
+	color: #888888;
+	font-size: 24rpx;
+}
+ 
+ 
+ 
+.phone-100 {
+    width: 100% !important;
+}
+ 
+image{
+    display: block;
+}
