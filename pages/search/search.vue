@@ -1,36 +1,15 @@
 <template>
     <view class="router-box">
-         <Navigation backTitle="查询"  ></Navigation>
-        <view class="content-box" v-if="list.length">
-            <view v-for="(item, index) in list" :key="index">
-                <view>编码：{{item.conCode}}</view>
-              
-                <view>尺寸：高:{{ item.hth }} CM 长:{{item.lth}}CM 宽 {{item.wth}} CM </view>
-                <view>重量：{{item.weight}}KG</view>
-                <view>入库时间：{{item.createdDate}}</view>
-                <view class="artery"><text>干线：{{item.channelName}}</text> </view>
-                <view class="img-box" v-if="item.img && item.img.length" >
-                    <image 
-                        v-for="(itemImg, i) in getImg(item.oosUrl)" :key="i" @click="lookImg(getImg(item.oosUrl),i)"
-                        :src="itemImg"
-                        mode="widthFix"
-                        
-                    />
-                </view>
-            </view>
-        </view>
-        <view v-if="!list.length & !loading" class="tips_box"> 暂无数据 </view>
-        <uni-load-more
-            status="loading"
-            :contentText="{ contentrefresh: '正在加载中' }"
-            v-show="loading"
-        ></uni-load-more>
+         <Navigation :backTitle="$t('search')"  ></Navigation>
+             <List ref="list"></List>
     </view>
 </template>
 
 <script>
+import List from "@/components/list/list.vue";
 export default {
     name: "searh",
+     components: { List },
     data() {
         return {
             list:[],
@@ -41,53 +20,14 @@ export default {
         };
     },
    onReachBottom() {
-        if (this.pageNo * this.pageSize < this.total && !this.loading) {
-            this.loading = true;
-            this.pageNo += 1;
-            this.getList(this.pageNo);
+         let _this=  this.$refs.list
+        if (_this.pageNo * _this.pageSize < _this.total && !_this.loading) {
+            _this.loading = true;
+            _this.pageNo += 1;
+            _this.getList(_this.pageNo);
         }
     },
-    methods: {
-        getImg(oosUrl){
-            return oosUrl.split(',')
-        },
-        lookImg(url,index=0){
-                uni.previewImage({
-                urls: url,
-                current: index,
-            });
-        },
-        getList(page) {
-            this.apifn({
-                url: "pda/api/v1/list",
-                method: "post",
-                data: {
-                     pageNo: page ? page : 1,
-                     pageSize: page ? 10 : this.pageNo * 10,
-                     scanCode: "",
-                },
-            }).then((res) => {
-                      if (page) {
-                        this.list = this.list.concat(
-                            res?.result?.records
-                        );
-                    } else {
-                        this.list = res?.result?.records;
-                        uni.hideLoading();
-                    }
-
-                    this.total = res?.result?.total;
-                    this.loading = false;
-            },
-              (err) => {
-                    this.loading = false;
-                }
-            );
-        },
-    },
-    created() {
-        this.getList()
-    },
+   
 };
 </script>
 

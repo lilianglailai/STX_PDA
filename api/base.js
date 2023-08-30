@@ -1,9 +1,27 @@
-export let baseURL = 'http://192.168.1.19:9090/jeecg-boot/';
-// export let baseURL= "https://ils.tangzhen.net/jeecg-boot/";
-let token =uni.getStorageSync('token')?uni.getStorageSync('token') :undefined
+import VueI18n from 'vue-i18n'
+import Vue from 'vue'
+// export let baseURL = 'http://192.168.1.19:9090/jeecg-boot/';
+export let baseURL= "http://www.ilsau.cn/jeecg-boot/";
+let token =uni.getStorageSync('token') ||undefined
 if (uni.getStorageSync('token')) {
     token
 }
+
+import en from "../locale/en.js";
+import zh from "../locale/zh.js";
+let locale=uni.getStorageSync('locale') || 'zh'
+
+ 
+Vue.use(VueI18n)
+ 
+export const i18n = new VueI18n({
+    locale:locale,
+    messages:{ 
+        'zh': zh, // 中文
+        'en': en, 
+    }
+  })
+   
 export const myRequest = (options) => {
 	return new Promise((resolve, reject) => {
 		uni.request({
@@ -37,7 +55,7 @@ export const myRequest = (options) => {
 				}else if(res.data.code == 500){
 					reject()
                     uni.showToast({
-                        title: "系统错误请联系管理员",
+                        title: i18n.t('err'),
                         icon: "none",
                     });
 				}else{

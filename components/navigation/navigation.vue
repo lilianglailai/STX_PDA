@@ -15,11 +15,12 @@
             </view>
 
             <view v-if="titleShow" @click="isSearchFilter = !isSearchFilter" class="info">{{ title }}
-                	<view class="search-filter" :class="{'search-filter-active':isSearchFilter}">
+                	<view class="search-filter" :style="{ 'height':isSearchFilter ? list.length * 76 + 12+'rpx': 0}">
 							<view class="triangle"></view>
 							<view class="filter">
-								<view class="flex-a"  @click.stop="isSearchFilter =false;quit()"
-									 >退出</view>
+								<view class="flex-a"  @click.stop="isSearchFilter =false;item.fn()" v-for="(item, index) in list" :key="index"
+									 >{{item.laebl}}</view>
+                                   
 								<!-- <view class="flex-a" @click.stop="isSearchFilter =false;goPassword()"
 									 >修改密码</view> -->
 							</view>
@@ -47,7 +48,11 @@ export default {
     },
     data() {
         return {
-            isSearchFilter:false
+            isSearchFilter:false,
+            list:[
+                {laebl:this.$t('exit'),fn:this.quit.bind()},
+                
+            ]
         };
     },
     computed: {
@@ -56,7 +61,9 @@ export default {
         },
     },
     methods: {
+       
         quit() {
+           
             uni.removeStorageSync('username');
             uni.removeStorageSync('token');
             uni.reLaunch({
@@ -115,7 +122,7 @@ export default {
     .search-filter {
         position: absolute;
         width: 160rpx;
-        height: 0rpx;
+        
         overflow: hidden;
         transition: all 0.5s;
         top: 54rpx;
@@ -134,7 +141,7 @@ export default {
 
         .filter {
             width: 100%;
-            height: 176rpx;
+            
             background-color: rgba(0,0,0,0.5);
             border-radius: 16rpx;
             
@@ -145,7 +152,7 @@ export default {
                 box-sizing: border-box;
                 font-weight: 500;
                 padding-left: 16rpx;
-                height: 100rpx;
+                height: 76rpx;
             }
              > view:not(:last-child){
                  
@@ -154,8 +161,6 @@ export default {
             }
         }
      }
-     .search-filter-active {
-					height: 112rpx;
-	}
+     
 }
 </style>

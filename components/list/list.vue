@@ -3,12 +3,12 @@
         
         <view class="content-box" v-if="list.length">
             <view v-for="(item, index) in list" :key="index">
-                <view>编码：{{item.conCode}}</view>
-              
-                <view>尺寸：高:{{ item.hth }} CM 长:{{item.lth}}CM 宽 {{item.wth}} CM </view>
-                <view>重量：{{item.weight}}KG</view>
-                <view>入库时间：{{item.createdDate}}</view>
-                <view class="artery"><text>干线：{{item.channelName}}</text> </view>
+                <view>{{$t("list.oldCode")}}：{{item.oldCode}}</view>
+                <view class="artery"><text>{{$t("list.trunk_line")}}：{{item.channelName}}</text> </view>
+                <view>{{$t("list.size")}}：{{$t("list.high")}}:{{ item.hth }} CM {{$t("list.length")}}:{{item.lth}}CM {{$t("list.width")}} {{item.wth}} CM </view>
+                <view>{{$t("list.weight")}}：{{item.weight}}KG</view>
+                <view>{{$t("list.createdDate")}}：{{item.createdDate}}</view>
+               
                 <view class="img-box" v-if="item.img && item.img.length" >
                     <image 
                         v-for="(itemImg, i) in getImg(item.oosUrl)" :key="i" @click="lookImg(getImg(item.oosUrl),i)"
@@ -19,10 +19,10 @@
                 </view>
             </view>
         </view>
-        <view v-if="!list.length & !loading" class="tips_box"> 暂无数据 </view>
+        <view v-if="!list.length & !loading" class="tips_box"> {{$t("not_data")}} </view>
         <uni-load-more
             status="loading"
-            :contentText="{ contentrefresh: '正在加载中' }"
+            :contentText="{ contentrefresh: $t('loading')  }"
             v-show="loading"
         ></uni-load-more>
     </view>
@@ -30,7 +30,7 @@
 
 <script>
 export default {
-    name: "searh",
+    name: "list",
     data() {
         return {
             list:[],
@@ -52,6 +52,7 @@ export default {
             });
         },
         getList(page) {
+            console.log(222);
             this.apifn({
                 url: "pda/api/v1/list",
                 method: "post",
@@ -128,5 +129,6 @@ export default {
             margin-top: 16rpx;
         }
     }
+    
 }
 </style>

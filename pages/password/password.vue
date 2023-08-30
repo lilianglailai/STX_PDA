@@ -1,6 +1,6 @@
 <template>
     <view class="router-box">
-        <Navigation backTitle="修改密码" :titleShow="false"></Navigation>
+        <Navigation :backTitle="$t('update') + $t('login.password')" :titleShow="false"></Navigation>
         <view class="box">
             <view v-for="(item, index) in list" class="flex" :key="index">
                 <label
@@ -10,18 +10,13 @@
                         style="color: red; margin-left: 10rpx"
                         >*</text
                     >
-                    <text
-                        class="ask"
-                        v-if="item.label == '绑定邮箱'"
-                        @tap="ask(index)"
-                        >?</text
-                    >
+                
                 </label>
                 <input
                     v-if="!item.slot"
                     type="text"
                     v-model="obj[item.value]"
-                    :placeholder="'请输入' + item.label"
+                    :placeholder="$t('please')+ item.label"
                     class="pop_input"
                     @confirm="index == list.length - 1 ? sumbit() : null"
                 />
@@ -32,7 +27,7 @@
                 :loading="loading"
                 :disabled="loading"
             >
-                保存
+                {{$t('sumbit')}}
             </button>
         </view>
     </view>
@@ -55,7 +50,7 @@ export default {
             let a = this.list.some((ele) => {
                 if (ele.required && !this.obj[ele.value]) {
                     uni.showToast({
-                        title: "请输入" + ele.label,
+                        title: this.$t('please') + ele.label,
                         icon: "none",
                     });
                     return true;

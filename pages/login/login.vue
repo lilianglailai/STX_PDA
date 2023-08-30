@@ -7,7 +7,7 @@
                 <uni-easyinput
                     prefixIcon="person-filled"
                     v-model="obj.username"
-                    placeholder="请输入您的账号"
+                    :placeholder="$t('please')+$t('login.username')"
                      @confirm="focus=1"
                 >
                 </uni-easyinput>
@@ -17,7 +17,7 @@
                    :focus="focus == 1"
                     prefixIcon="locked-filled"
                     v-model="obj.password"
-                    placeholder="请输入您的密码" 
+                    :placeholder="$t('please')+$t('login.password')" 
                     type="password"
                     @confirm="focus=2;sumbit()"
                 >
@@ -31,7 +31,7 @@
                     @click="sumbit"
                     @keyup.enter="sumbit"
                 >
-                    登录
+                    {{$t('login.login')}}
                 </button>
             </view>
         </view>

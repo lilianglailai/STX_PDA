@@ -21,4 +21,11 @@
 body{
     background: #F2F2F2;
 }
+ .number{
+       color: #3882EE;
+       font-weight: bold;
+           transform: scale(1.3);
+    display: inline-block;
+    margin-right: 4px;
+    }
 </style>

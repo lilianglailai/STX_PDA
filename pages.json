@@ -39,6 +39,43 @@
 
 },
 {
+    "path": "pages/set/set",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/printerSetup/printerSetup",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/printer/printer",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/deliveryOrder/deliveryOrder",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+
+{
     "path": "pages/password/password",
     "style" :
     {

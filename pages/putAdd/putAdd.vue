@@ -1,16 +1,16 @@
 <template>
     <view class="router-box">
-        <Navigation backTitle="入库信息"></Navigation>
+        <Navigation :backTitle="$t('putAdd.title')"></Navigation>
         <view class="content-box">
             <view class="top-box">
-                <view>编码:{{ obj.scanCode }}</view>
-                <view>干线：{{ obj.channelName }}</view>
+                <view>{{$t("list.oldCode")}}:{{ obj.scanCode }}</view>
+                <view>{{$t("list.trunk_line")}}：{{ obj.channelName }}</view>
             </view>
             <view class="form-box">
                 <view v-for="(item, index) in list" class="flex-a" :key="index">
                     <view class="label">
                         <text v-if="item.required" style="color: red">*</text>
-                        {{ item.label }}
+                        {{ item.label }}:
                     </view>
                     <input
                         type="number"
@@ -24,7 +24,7 @@
                 </view>
             </view>
             <view class="upload-box">
-                <view class="title">请上传包裹图片</view>
+                <view class="title">{{$t("put.upload")}}</view>
                 <uni-file-picker
                     v-model="tempFilePaths"
                     limit="9"
@@ -55,7 +55,7 @@
                 :loading="loading"
                 @click="sumbit"
             >
-                {{ obj.update ? "修改" : "提交入库" }}
+                {{ obj.update ? $t("update") :$t("submit")  }}
             </button>
             <!-- <button
                 class="sumbit"
@@ -86,25 +86,25 @@ export default {
             list: [
                 {
                     required: true,
-                    label: "长度",
+                    label: this.$t("list.length"),
                     prop: "lth",
                     unit: "CM",
                 },
                 {
                     required: true,
-                    label: "宽度",
+                    label: this.$t("list.width"),
                     prop: "wth",
                     unit: "CM",
                 },
                 {
                     required: true,
-                    label: "高度",
+                    label: this.$t("list.high"),
                     prop: "hth",
                     unit: "CM",
                 },
                 {
                     required: true,
-                    label: "重量",
+                    label:this.$t("list.weight"),
                     prop: "weight",
                     unit: "KG",
                 },
@@ -212,6 +212,7 @@ export default {
                     uni.showToast({
                         title: res.message,
                     });
+                    
                     uni.$emit("refresh");
                     const innerAudioContext = uni.createInnerAudioContext();
                     innerAudioContext.autoplay = true;
@@ -246,8 +247,8 @@ export default {
 
             if (this.obj.update) {
                 uni.showModal({
-                    title: "提示",
-                    content: "你已入库，是否二次入库",
+                    
+                    content: this.$t("putAdd.showModal"),
                     success: (res) => {
                         if (res.confirm) {
                             this.add();
@@ -308,7 +309,7 @@ export default {
 .btn {
     z-index: 999;
     position: fixed;
-    bottom: 0px;
+    bottom: 10px;
     padding: 20rpx 0;
     width: 100%;
     padding-bottom: constant(safe-area-inset-bottom);
@@ -318,7 +319,7 @@ export default {
     width: 714rpx;
     height: 84rpx;
     background: #3882ee;
-    border-radius: 6px;
+    border-radius: 9rpx;
     margin: 16rpx auto 0;
     font-size: 47rpx;
     line-height: 84rpx;
