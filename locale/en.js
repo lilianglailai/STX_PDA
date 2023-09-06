@@ -6,8 +6,10 @@ export default{
     not_data:"no data",
     loading:"loading",
     please:"please input ",
+    empty:"empty",
     setup:"set",
     record:"Today's Record",
+    update_password:"change password",
     succeed:"succeed",
     copy:"copy",
     err:"Failed, please contact the administrator",
@@ -19,13 +21,13 @@ export default{
     home:{
         list:{
             put:"be put in storage",
-            out:"Ex-warehouse",
+            out:"Scan Out",
             search:"search",
             check:"check",
             deliveryOrder:"delivery Order",
           
-            caPai:"caPai",
-            
+            Signature:"Signature",
+            stuffing:"stuffing"
         }
     },
     put:{
@@ -61,6 +63,14 @@ export default{
         deliveryOrderList:"Change order time",
         piece:"piece"
      },
+     Handover:{
+        title:"scan",
+        placeholder:"Please enter or scan the receipt number",
+     },
+     HandoverEdit:{
+        title:"scan",
+        placeholder:"Please enter or scan the parcel number",
+     },
      printer:{
         title:"printer",
         form:{
@@ -77,5 +87,31 @@ export default{
             label3:"ilsApi Address  IP + PORT"
         },
         example:"for example"
+     },
+     caPai:{
+        menu:"menu",
+        Create_Task:"Create Task"
+     },
+     vehicle:{
+        list:{
+            Driver:"Driver",
+            Rego:"Rego",
+            Phone:"Phone",
+            PhonePl:""
+        }
+     },
+     signature:{
+        Signature_Type:"Signature Type",
+        signatur:"Please provide your signatur",
+        delivery:"Please select a delivery type",
+
+     },
+     stuffingDetail:{
+        list:{
+            destination:"destination",
+            container_number:"container_number",
+            date:"date",
+        }
+       
      }
 }

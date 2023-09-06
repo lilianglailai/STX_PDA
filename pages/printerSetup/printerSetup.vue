@@ -21,7 +21,7 @@
                     :placeholder="$t('please') + item.label"
                     class="pop_input"
                     placeholder-class="placeholder"
-                    @confirm="index == list.length - 1 ? sumbit() : null"
+                    @confirm="index == list.length - 1 ? submit() : null"
                 />
                 <view class="example" 
                     >{{ $t("printerSetup.example") }}:{{ item.example }} <image src="@/static/printerSetup/copy.png"  @click="copy(item.example)"  mode="widthFix"></image></view
@@ -29,8 +29,8 @@
             </view>
         </view>
         <button
-            class="sumbit"
-            @click="sumbit"
+            class="submit"
+            @click="submit"
             :loading="loading"
             :disabled="loading"
         >
@@ -89,7 +89,7 @@ export default {
 				}
 			})
         },
-        sumbit() {
+        submit() {
             let a = this.list.some((ele) => {
                 if (ele.required && !this.obj[ele.value]) {
                     uni.showToast({
@@ -164,7 +164,7 @@ display: flex;
     }
  
 }
-.sumbit {
+.submit {
     width: 714rpx;
     height: 84rpx;
     background: #3882ee;

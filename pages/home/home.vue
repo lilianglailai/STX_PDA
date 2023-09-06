@@ -55,8 +55,11 @@ export default {
                     titile: this.$t('home.list.deliveryOrder'),
                     
                 },
-                 {titile:this.$t('home.list.caPai'),url:'/pages/caPai/caPai', img: require("@/static/home/caPai.png"), disabled:true},
+                 {titile:this.$t('home.list.Signature'),url:'/pages/caPai/caPai', img: require("@/static/home/caPai.png") },
+                  {titile:"收货-交接",url:'/pages/Handover/Handover', img: require("@/static/home/Handover.png")},
+                   {titile:this.$t('home.list.stuffing'), img: require("@/static/home/stuffing.png"),   url: "/pages/stuffing/stuffing"},
                 {titile:this.$t('setup'),url:'/pages/set/set', img: require("@/static/home/set.png")},
+               
                
             ],
         };
@@ -81,7 +84,7 @@ export default {
     display:  flex;
     justify-content: space-between;
     // column-gap: 73rpx;
-    padding: 51.5rpx 37.5rpx;
+    padding: 51.5rpx 21rpx;
     flex-wrap: wrap;
     .item-box {
         font-size: 47rpx;
@@ -89,13 +92,14 @@ export default {
         color: #333333;
         flex-direction: column;
         margin-bottom: 67rpx;
+        width: 214rpx;
         image {
             width: 176.56rpx;
             margin-bottom: 25rpx;
         }
         .title{
             text-align: center;
-               width: 176.56rpx;
+              
         }
     }
 }

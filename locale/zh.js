@@ -1,6 +1,8 @@
 export default{
     exit: "退出",
     submit:"提交",
+    empty:"清空",
+    update_password:"修改密码",
     update:"修改",
     search:"查询",
     not_data:"暂无数据",
@@ -24,7 +26,8 @@ export default{
             check:"盘点",
             deliveryOrder:"换单",
           
-            caPai:"卡派"
+            Signature:"卡派",
+            stuffing:"装柜"
         }
       
     },
@@ -55,11 +58,21 @@ export default{
     deliveryOrder:{
         title:"扫码换单"
      },
+   
      deliveryOrderList:{
         replacement:"换单件数", 
         Change_time:"换单时间",
         piece:"件",
      },
+     Handover:{
+        title:"扫码",
+        placeholder:"请输入或扫描交接单号",
+     },
+     HandoverEdit:{
+        title:"扫码",
+        placeholder:"请输入或扫描包裹单号",
+     },
+  
      printer:{
         title:"打印面单",
         form:{
@@ -77,5 +90,30 @@ export default{
             label3:"ilsApi地址IP + 端口号"
         },
         example:"如"
+     },
+     caPai:{
+        menu:"菜单",
+        Create_Task:"创建任务"
+     },
+     vehicle:{
+
+     },
+     vehicle:{
+        list:{
+            Driver:"Driver",
+            Rego:"Rego",
+            Phone:"Phone"
+        }
+     },
+     signature:{
+        
+     },
+     stuffingDetail:{
+        list:{
+            destination:"目的港",
+            container_number:"柜号",
+            date:"日期",
+        }
+      
      }
 }

@@ -1,7 +1,18 @@
 import VueI18n from 'vue-i18n'
 import Vue from 'vue'
-// export let baseURL = 'http://192.168.1.19:9090/jeecg-boot/';
-export let baseURL= "http://www.ilsau.cn/jeecg-boot/";
+// let baseURL = 'http://192.168.1.60:8091/'
+let baseURL = 'http://192.168.1.60:80/'
+// let baseURL =  'http://192.168.1.15:9090/'
+// if (process.env.NODE_ENV == 'development') {
+//     baseURL = 'http://192.168.1.60:80/' // 开发环境37唐哥，10吴，60公用开发,55吴鹏
+             
+ 
+// } else {
+//     baseURL = 'http://192.168.1.60:80/' // 开发环境
+ 
+// }
+export default  baseURL 
+// export let baseURL= "http://www.ilsau.cn/jeecg-boot/";
 let token =uni.getStorageSync('token') ||undefined
 if (uni.getStorageSync('token')) {
     token
@@ -28,7 +39,7 @@ export const myRequest = (options) => {
 			url: baseURL + options.url, 
 			method: options.method || 'GET',  
 			data: options.data || {}, 
-		 
+		    
             header:{
                 'X-Access-Token':uni.getStorageSync('token')
             },
@@ -53,12 +64,12 @@ export const myRequest = (options) => {
 						}
 					});
 				}else if(res.data.code == 500){
-					reject()
+					reject(res.data)
                     uni.showToast({
-                        title: i18n.t('err'),
+                        title: res.data.msg  ||res.data.message||i18n.t('err'),
                         icon: "none",
                     });
-				}else{
+				}else if(res.data.code==200){
 					// uni.showToast({
 					// 	title: res.data.code,
 					// 	icon: 'none',
@@ -66,7 +77,10 @@ export const myRequest = (options) => {
 					// 	duration: 2000
 					// });
 					resolve(res.data);
-				}
+				}else{
+                    reject(res.data)
+                  
+                }
 				//返回的数据（不固定，看后端接口，这里是做了一个判断，如果不为true，用uni.showToast方法提示获取数据失败)
 				// if (res.data.success != true) {
 				// 	return uni.showToast({

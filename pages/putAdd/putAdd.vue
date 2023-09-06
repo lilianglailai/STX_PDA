@@ -50,15 +50,15 @@
         </view>
         <view class="flex-c btn">
             <button
-                class="sumbit"
+                class="submit"
                 :disabled="loading"
                 :loading="loading"
-                @click="sumbit"
+                @click="submit"
             >
                 {{ obj.update ? $t("update") :$t("submit")  }}
             </button>
             <!-- <button
-                class="sumbit"
+                class="submit"
                 :disabled="loading"
                 :loading="loading"
               
@@ -151,7 +151,7 @@ export default {
             console.log(this.apiUrl);
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
-                    url: this.apiUrl + "pda/api/v1/uploadByOss",
+                    url: this.apiUrl + "jeecg-boot/pda/api/v1/uploadByOss",
                     filePath: element,
                     name: "file",
 
@@ -179,7 +179,7 @@ export default {
                 this.focus = index + 1;
             });
             if (index == this.list.length - 1) {
-                this.sumbit();
+                this.submit();
             }
         },
         fileSelect(e) {
@@ -204,7 +204,7 @@ export default {
             }
 
             this.apifn({
-                url: "pda/api/v1/add",
+                url: "jeecg-boot/pda/api/v1/add",
                 method: "post",
                 data: this.obj,
             }).then(
@@ -212,7 +212,7 @@ export default {
                     uni.showToast({
                         title: res.message,
                     });
-                    
+                     
                     uni.$emit("refresh");
                     const innerAudioContext = uni.createInnerAudioContext();
                     innerAudioContext.autoplay = true;
@@ -231,7 +231,7 @@ export default {
                 }
             );
         },
-        sumbit() {
+        submit() {
             let a = this.list.some((res) => {
                 if (!this.obj[res.prop]) {
                     uni.showToast({
@@ -315,7 +315,7 @@ export default {
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
 }
-.sumbit {
+.submit {
     width: 714rpx;
     height: 84rpx;
     background: #3882ee;

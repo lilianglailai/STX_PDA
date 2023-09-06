@@ -2,8 +2,9 @@ import Vue from 'vue'
 import App from './App'
  
 // #ifndef VUE3
-import { myRequest ,baseURL,i18n} from "./api/base.js"
+import baseURL,{ myRequest ,i18n} from "./api/base.js"
 Vue.prototype.apifn = myRequest
+ 
 Vue.prototype.apiUrl = baseURL
 import store from './store'  
 Vue.prototype.$store = store

@@ -18,16 +18,16 @@
                     v-model="obj[item.value]"
                     :placeholder="$t('please')+ item.label"
                     class="pop_input"
-                    @confirm="index == list.length - 1 ? sumbit() : null"
+                    @confirm="index == list.length - 1 ? submit() : null"
                 />
             </view>
             <button
-                class="sumbit"
-                @click="sumbit"
+                class="submit"
+                @click="submit"
                 :loading="loading"
                 :disabled="loading"
             >
-                {{$t('sumbit')}}
+                {{$t('submit')}}
             </button>
         </view>
     </view>
@@ -39,14 +39,14 @@ export default {
     data() {
         return {
             time: null,
-            list: [{ label: "新密码", value: "password", required: true }],
+            list: [{ label: this.$t("login.password"), value: "password", required: true }],
             loading: false,
             obj: {},
         };
     },
 
     methods: {
-        sumbit() {
+        submit() {
             let a = this.list.some((ele) => {
                 if (ele.required && !this.obj[ele.value]) {
                     uni.showToast({
@@ -62,7 +62,7 @@ export default {
             this.loading = true;
             this.obj.username = uni.getStorageSync("username");
             this.apifn({
-                url: "pda/api/v1/updatePassWord",
+                url: "jeecg-boot/pda/api/v1/updatePassWord",
                 method: "post",
                 data: this.obj,
             }).then(
@@ -122,7 +122,7 @@ export default {
         font-weight: 500;
     }
 }
-.sumbit {
+.submit {
     margin-top: 50rpx;
     width: 600rpx;
     height: 80rpx;

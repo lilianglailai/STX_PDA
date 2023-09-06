@@ -48,6 +48,80 @@
 
 },
 {
+    "path": "pages/Handover/Handover",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/caPai/caPai",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/stuffing/stuffing",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/stuffing/stuffingDetail",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/stuffing/stuffingScan",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/caPai/signature/signature",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+{
+    "path": "pages/vehicle/vehicle",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+
+{
+    "path": "pages/HandoverEdit/HandoverEdit",
+    "style" :
+    {
+         
+        "navigationStyle": "custom"
+    }
+
+},
+
+{
     "path": "pages/printerSetup/printerSetup",
     "style" :
     {

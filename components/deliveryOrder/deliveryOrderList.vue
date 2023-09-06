@@ -33,7 +33,9 @@ export default {
     name: "deliveryOrderList",
     data() {
         return {
-            list:[],
+            list:[
+                
+            ],
             loading: true,
             pageNo:1,
             pageSize:10,
@@ -53,7 +55,7 @@ export default {
         },
         getList(page) {
             this.apifn({
-                url: "pda/api/v1/findGroupBilLLogList",
+                url: "jeecg-boot/pda/api/v1/findGroupBilLLogList",
                 method: "post",
                 data: {
                      pageNo: page ? page : 1,
@@ -91,7 +93,7 @@ export default {
     font-weight: 500;
     color: #333333;
     > view {
-        margin-top: 19rpx;
+        margin-bottom: 19rpx;
         padding: 16rpx 28rpx;
         background: white;
         > view:not(:last-child) {

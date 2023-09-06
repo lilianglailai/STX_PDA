@@ -9,10 +9,10 @@
             </view>
                <view>
                      <button
-                class="sumbit"
+                class="submit"
                 :disabled="loading"
                 :loading="loading"
-                @click="sumbit"
+                @click="submit"
             >
                    {{ obj.update ? $t("update") :$t("printer.submit")  }}
             </button>
@@ -39,7 +39,7 @@ export default {
     }
   },
   methods: {
-    sumbit(){
+    submit(){
      
            this.loading=true
           
@@ -106,7 +106,7 @@ export default {
             margin-bottom: 16rpx;
         }
     }
-    .sumbit {
+    .submit {
    
     width: 714rpx;
     height: 84rpx;

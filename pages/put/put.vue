@@ -8,7 +8,7 @@
                 :placeholder="$t('put.placeholder')"
                 placeholder-class="placeholder"
                 v-model="number"
-                @confirm="getBycode(number)"
+                @confirm="getConfirm(number)"
             />
             <image src="/static/put/put.png" @click="scan" mode="widthFix" />
         </view>
@@ -27,7 +27,7 @@ export default {
     data() {
         return {
             // show: false,
-            isSearch: false,
+            codeQueryTag: false,
             list: [],
             number: "", //HYW1298000418
         };
@@ -36,7 +36,10 @@ export default {
         // this.show = true
         uni.$on("refresh", () => {
             this.number = "";
-            this.$refs.list.getList();
+            let _this = this.$refs.list;
+             _this.loading = true;
+            _this.pageNo = 1;
+           _this.getList();
             
         });
     },
@@ -67,6 +70,10 @@ export default {
         }
     },
     methods: {
+          getConfirm(code) {
+            if (this.codeQueryTag) return false;
+            this.getBycode(code);
+        },
         initScan() {
             let _this = this;
             main = plus.android.runtimeMainActivity(); //获取activity
@@ -92,25 +99,23 @@ export default {
         stopScan() {
             main.unregisterReceiver(receiver);
         },
-        queryCode: function (code) {
+        queryCode (code) {
             //防重复
-            if (_codeQueryTag) return false;
-            _codeQueryTag = true;
-            setTimeout(function () {
-                _codeQueryTag = false;
-            }, 150);
+            if (this.codeQueryTag) return false;
+             this.codeQueryTag
+           
             this.number = code;
             this.getBycode(code);
         },
 
         scan() {
-            if (this.isSearch) {
+            if (this.codeQueryTag) {
                 return false;
             }
 
             uni.scanCode({
                 success: (res) => {
-                    this.isSearch = true;
+                    this.codeQueryTag = true;
                     this.getBycode(res.result);
                 },
             });
@@ -121,13 +126,14 @@ export default {
                 title: "加载中",
             });
             this.apifn({
-                url: "pda/api/v1/findChannelNameByCode",
+                url: "jeecg-boot/pda/api/v1/findChannelNameByCode",
                 method: "post",
                 data: {
                     code: code,
                 },
             }).then(
                 (res) => {
+                    this.codeQueryTag = false;
                     if (res.result) {
                         let obj = {};
                         obj.scanCode = code;
@@ -153,7 +159,7 @@ export default {
                         innerAudioContext.src = `https://tts.baidu.com/text2audio.mp3?tex=${this.$t(
                             "put.err"
                         )}&cuid=baike&amp&lan=ZH&amp&ctp=1&amp&pdt=301&amp&vol=100&amp&rate=32&amp`;
-
+                        
                         innerAudioContext.onPlay(() => {});
                         uni.showToast({
                             title: this.$t("put.err"),
@@ -162,7 +168,7 @@ export default {
                     }
                 },
                 (err) => {
-                    this.isSearch = false;
+                    this.codeQueryTag = false;
                 }
             );
         },
@@ -198,39 +204,11 @@ export default {
         color: #949494;
     }
 }
-.content-box {
-    font-size: 38rpx;
-    font-weight: 500;
-    color: #333333;
-    > view {
-        margin-top: 15.6rpx;
-        padding: 16rpx 28rpx;
-        background: white;
-        > view:not(:last-child) {
-            margin-bottom: 20rpx;
-        }
-    }
-    .artery {
-        display: flex;
-        justify-content: space-between;
-        .right {
-            font-size: 38rpx;
-            font-weight: bold;
-            color: #a4a4a4;
-        }
-    }
-    .img-box {
-        display: flex;
-        flex-wrap: wrap;
-        image {
-            width: 125.47rpx;
-            margin: 26rpx;
-        }
-    }
-}
+ 
 .list-title {
     padding: 16rpx 0 16rpx 22rpx;
     height: 36rpx;
+    line-height: 36rpx;
     font-size: 38rpx;
     font-weight: bold;
     color: #3882ee;

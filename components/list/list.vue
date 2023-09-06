@@ -54,7 +54,7 @@ export default {
         getList(page) {
             console.log(222);
             this.apifn({
-                url: "pda/api/v1/list",
+                url: "jeecg-boot/pda/api/v1/list",
                 method: "post",
                 data: {
                      pageNo: page ? page : 1,
@@ -92,14 +92,14 @@ export default {
     font-weight: 500;
     color: #333333;
     > view {
-        margin-top: 19rpx;
+        margin-bottom: 19rpx;
         padding: 16rpx 28rpx;
         background: white;
         > view:not(:last-child) {
             margin-bottom: 20rpx;
         }
     }
-    .sumbit {
+    .submit {
         width: 714rpx;
         height: 84rpx;
         background: #3882ee;

@@ -19,7 +19,7 @@
                     v-model="obj.password"
                     :placeholder="$t('please')+$t('login.password')" 
                     type="password"
-                    @confirm="focus=2;sumbit()"
+                    @confirm="focus=2;submit()"
                 >
                 </uni-easyinput>
             </view>
@@ -27,9 +27,9 @@
                 <button
                     :disabled="loading"
                     :loading="loading"
-                    class="sumbit"
-                    @click="sumbit"
-                    @keyup.enter="sumbit"
+                    class="submit"
+                    @click="submit"
+                    @keyup.enter="submit"
                 >
                     {{$t('login.login')}}
                 </button>
@@ -60,7 +60,7 @@ export default {
     },
     
     methods: {
-        sumbit() {
+        submit() {
             if (!this.obj.username) {
                 uni.showToast({
                     title: "请输入账号",
@@ -77,7 +77,7 @@ export default {
             }
             this.loading = true;
             this.apifn({
-                url: "pda/api/v1/login",
+                url: "jeecg-boot/pda/api/v1/login",
                 method: "post",
                 data: this.obj,
             }).then(
@@ -132,7 +132,7 @@ export default {
 /deep/.uni-icons {
     font-size: 42.19rpx !important;
 }
-.sumbit {
+.submit {
     height: 84rpx;
     background: #3882ee;
     background: #3882ee;

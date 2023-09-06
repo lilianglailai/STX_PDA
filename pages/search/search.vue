@@ -44,7 +44,7 @@ export default {
             margin-bottom: 20rpx;
         }
     }
-    .sumbit {
+    .submit {
         width: 714rpx;
         height: 84rpx;
         background: #3882ee;
