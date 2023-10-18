@@ -78,7 +78,7 @@ export default {
     data() {
         return {
             loading: false,
-            artery: "",
+           
             focus: null,
             tempFilePaths: [],
             time: null,
@@ -169,7 +169,6 @@ export default {
         async confirmuploading(list) {
             for (let index = 0; index < list.length; index++) {
                 let img = await this.uploadingImge(list[index].url);
-
                 this.obj.img.push(img);
             }
         },
@@ -183,6 +182,7 @@ export default {
             }
         },
         fileSelect(e) {
+            console.log(e);
             e.tempFilePaths.forEach((res) => {
                 this.tempFilePaths.push({ url: res });
             });
@@ -198,7 +198,7 @@ export default {
         async add() {
             this.obj.img = [];
             this.loading = true;
-            this.obj.storeCode = "东莞";
+            this.obj.storeCode = uni.getStorageSync("warehouse") || "深圳仓"
             if (this.tempFilePaths.length) {
                 await this.confirmuploading(this.tempFilePaths);
             }
@@ -214,11 +214,7 @@ export default {
                     });
                      
                     uni.$emit("refresh");
-                    const innerAudioContext = uni.createInnerAudioContext();
-                    innerAudioContext.autoplay = true;
-                    innerAudioContext.src =
-                        "https://tts.baidu.com/text2audio.mp3?tex=%22%E5%85%A5%E5%BA%93%E6%88%90%E5%8A%9F%22&cuid=baike&amp&lan=ZH&amp&ctp=1&amp&pdt=301&amp&vol=100&amp&rate=32&amp";
-                    innerAudioContext.onPlay(() => {});
+                    this.playsucc()
                     this.time = setTimeout(() => {
                         this.loading = false;
                         uni.navigateBack({
@@ -227,7 +223,9 @@ export default {
                     }, 1500);
                 },
                 (err) => {
+                    this.playfail()
                     this.loading = false;
+                   
                 }
             );
         },

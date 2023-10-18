@@ -102,15 +102,7 @@ export default {
     }
  
 
-    .artery {
-        display: flex;
-        justify-content: space-between;
-        .right {
-            font-size: 38rpx;
-            font-weight: bold;
-            color: #a4a4a4;
-        }
-    }
+    
     .img-box {
         display: flex;
         flex-wrap: wrap;

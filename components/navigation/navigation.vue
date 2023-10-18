@@ -53,8 +53,8 @@ export default {
         return {
             isSearchFilter:false,
             list:[
-                {laebl:this.$t('exit'),fn:this.quit.bind()},
-                {laebl:this.$t('update_password'),fn:this.goPassword.bind()},
+                {laebl:this.$t('exit'),fn:this.quit},
+                {laebl:this.$t('update_password'),fn:this.goPassword},
             ]
         };
     },
@@ -94,7 +94,7 @@ export default {
     position: fixed;
     top: 0;
     width: 100vw;
-    z-index: 99;
+    z-index: 999;
 }
 .top-box {
     height: var(--status-bar-height);

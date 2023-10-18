@@ -20,6 +20,10 @@
             </view>
         </view>
         <view v-if="!list.length & !loading" class="tips_box"> {{$t("not_data")}} </view>
+             <view style="margin: 10pt 0;color: #999;font-size: 8pt;text-align: center;"
+					v-if="list.length>=10&&pageNo * pageSize >=total && !loading">
+					~~~~~~~~到底啦~~~~~~~~
+				</view>
         <uni-load-more
             status="loading"
             :contentText="{ contentrefresh: $t('loading')  }"
@@ -52,7 +56,6 @@ export default {
             });
         },
         getList(page) {
-            console.log(222);
             this.apifn({
                 url: "jeecg-boot/pda/api/v1/list",
                 method: "post",

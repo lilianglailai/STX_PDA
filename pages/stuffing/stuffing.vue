@@ -1,10 +1,10 @@
 <template>
     <view class="router-box">
-        <Navigation  backTitle="装柜"></Navigation>
-      
-            <view class="top-box">
-                   <button
-                   :style="{marginTop: !list.length?'100rpx':'0'}"
+        <Navigation backTitle="装柜"></Navigation>
+
+        <view class="top-box">
+            <button
+                :style="{ marginTop: !list.length ? '100rpx' : '0' }"
                 class="submit"
                 @click="add"
                 :loading="btnLoading"
@@ -12,45 +12,42 @@
             >
                 装柜
             </button>
-            </view>
-        
-   
-        
-        <view  v-if="list.length">
+        </view>
+
+        <view v-if="list.length">
             <view class="list-title">{{ $t("record") }}</view>
             <view class="content-box">
-                
-           
-            <view
-                v-for="(item, index) in list"
-                :key="index"
-                class="flex-a"
-                @click="go(item)"
-            >
-                <view class="flex1">
-                    <view class="black_title"
-                        >出库单号：{{ item.outNo }}</view
-                    >
-                    
-                    <view class="black_title"
-                        >已装柜：<text class="blue">{{
-                            item.parcelCounts
-                        }}</text>
-                        {{ $t("deliveryOrderList.piece") }}
+                <view
+                    v-for="(item, index) in list"
+                    :key="index"
+                    class="flex-a"
+                    @click="go(item)"
+                >
+                    <view class="flex1">
+                        <view class="black_title"
+                            >出库单号：{{ item.outNo }}</view
+                        >
+
+                        <view class="black_title"
+                            >已装柜：<text class="blue">{{ item.pcs }}</text>
+                            {{ $t("deliveryOrderList.piece") }}
+                        </view>
                     </view>
+                    <image
+                        src="@/static/Handover/right_arrows.png"
+                        mode="widthFix"
+                        style="width: 25rpx; margin-left: 10rpx"
+                    />
                 </view>
-                <image
-                    src="@/static/Handover/right_arrows.png"
-                    mode="widthFix"
-                    style="width: 25rpx; margin-left: 10rpx"
-                />
             </view>
-             </view>
-                <view v-if="!list.length & !loading" class="tips_box">
-            {{ $t("not_data") }}
-               </view>
+            <view v-if="!list.length & !loading" class="tips_box">
+                {{ $t("not_data") }}
+            </view>
         </view>
-     
+        <view style="margin: 10pt 0;color: #999;font-size: 8pt;text-align: center;"
+					v-if="list.length>=10&&pageNo * pageSize >=total && !loading">
+					~~~~~~~~到底啦~~~~~~~~
+				</view>
         <uni-load-more
             status="loading"
             :contentText="{ contentrefresh: $t('loading') }"
@@ -61,25 +58,21 @@
 
 
 <script>
-var main, receiver, filter;
 export default {
-    name: "Handover",
+    name: "stuffing",
     data() {
         return {
-            codeQueryTag: false,
-
-            number: "", //HYW1298000418
-            list: [
              
-            ],
-            loading: false, //单独控制loading，别放在方法里面。uni.$emit的时候不需要loading
+            number: "", //HYW1298000418
+            list: [],
+            loading: true,  
             pageNo: 1,
             pageSize: 10,
-            total: "",
+            total: 0,
             btnLoading: false,
         };
     },
-    created: function (option) {
+    created: function (option) { 
         this.getList();
         uni.$on("refresh", () => {
             this.number = "";
@@ -89,22 +82,8 @@ export default {
             this.getList();
         });
     },
-    onShow() {
-        // #ifdef APP
-        this.initScan();
-        this.startScan();
-        // #endif
-    },
-    onHide() {
-         // #ifdef APP
-        this.stopScan();
-         // #endif
-    },
+
     destroyed: function () {
-        /*页面退出时一定要卸载监听,否则下次进来时会重复，造成扫一次出2个以上的结果*/
-          // #ifdef APP
-        this.stopScan();
-        // #endif
         uni.$off("refresh");
     },
     onReachBottom() {
@@ -115,117 +94,26 @@ export default {
         }
     },
     methods: {
-        getConfirm(code) {
-            if (this.codeQueryTag) return false;
-            this.getBycode(code);
-        },
         go(item) {
             uni.navigateTo({
                 url:
                     "/pages/stuffing/stuffingScan?obj=" +
-                   
-                     encodeURIComponent(JSON.stringify(item))
+                    encodeURIComponent(JSON.stringify(item)),
             });
         },
         add() {
-              uni.navigateTo({
-                url:
-                    "/pages/stuffing/stuffingDetail"
-            });
-        },
-        initScan() {
-            let _this = this;
-            main = plus.android.runtimeMainActivity(); //获取activity
-            var IntentFilter = plus.android.importClass(
-                "android.content.IntentFilter"
-            );
-            filter = new IntentFilter();
-            filter.addAction("android.intent.ACTION_DECODE_DATA"); // 换你的广播动作
-            receiver = plus.android.implements(
-                "io.dcloud.feature.internal.reflect.BroadcastReceiver",
-                {
-                    onReceive: function (context, intent) {
-                        plus.android.importClass(intent);
-                        let code = intent.getStringExtra("barcode_string"); // 换你的广播标签
-                        // console.log("我是"+code);
-                        _this.queryCode(code);
-                    },
-                }
-            );
-        },
-        startScan() {
-            main.registerReceiver(receiver, filter);
-        },
-        stopScan() {
-            main.unregisterReceiver(receiver);
-        },
-        queryCode(code) {
-            //防重复
-            if (this.codeQueryTag) return false;
-            console.log(this.codeQueryTag);
-            this.codeQueryTag = true;
-
-            this.number = code;
-            this.getBycode(code);
-        },
-
-        scan() {
-            if (this.codeQueryTag) {
-                return false;
-            }
-
-            uni.scanCode({
-                success: (res) => {
-                    this.codeQueryTag = true;
-                    this.getBycode(res.result);
-                },
+            uni.navigateTo({
+                url: "/pages/stuffing/stuffingDetail",
             });
         },
 
-        getBycode(code) {
-            uni.showLoading({
-                title: "加载中",
-            });
-            this.apifn({
-                url:
-                    "oms/v1/OrderParcelForecast/checkBatchCode?checkCode=" +
-                    code,
-                method: "post",
-            }).then(
-                (res) => {
-                    this.number = "";
-                    this.codeQueryTag = false;
-                    uni.hideLoading();
-                    uni.navigateTo({
-                        url:
-                            "/pages/HandoverEdit/HandoverEdit?batchCode=" +
-                            code,
-                    });
-                },
-                (err) => {
-                    uni.hideLoading();
-                    
-                    uni.showModal({
-                        title: "提示",
-                        content: err.msg + "是否新增交接单",
-                        success: (res) => {
-                            if (res.confirm) {
-                                this.number = "";
-                                this.add();
-                                this.codeQueryTag = false;
-                            } else if (res.cancel) {
-                                this.codeQueryTag = false;
-                            }
-                        },
-                    });
-                }
-            );
-        },
+        
         getList(page) {
             this.apifn({
-                url: `oms/v1/OrderWmsOut/getPageList?pageNo=${page||1}&pageSize=10`,
+                url: `oms/v1/OrderWmsOut/getPageList?pageNo=${
+                    page || 1
+                }&pageSize=${this.pageSize}`,
                 method: "post",
-                
             }).then(
                 (res) => {
                     if (page) {
@@ -235,7 +123,7 @@ export default {
                         uni.hideLoading();
                     }
 
-                    this.total = res?.result?.sumDataCount;
+                    this.total = res?.body?.sumDataCount;
                     this.loading = false;
                 },
                 (err) => {
@@ -280,7 +168,6 @@ export default {
 .content-box {
     font-size: 38rpx;
     font-weight: 500;
-   
 
     .flex1 > view:not(:last-child) {
         margin-bottom: 20rpx;
@@ -295,26 +182,10 @@ export default {
         font-weight: 500;
         color: #333333;
     }
-    .artery {
-        display: flex;
-        justify-content: space-between;
-        .right {
-            font-size: 38rpx;
-            font-weight: bold;
-            color: #a4a4a4;
-        }
-    }
-    .img-box {
-        display: flex;
-        flex-wrap: wrap;
-        image {
-            width: 125.47rpx;
-            margin: 26rpx;
-        }
-    }
+    
+   
 }
 .list-title {
-   
     padding: 16rpx 0 16rpx 22rpx;
     height: 36rpx;
     font-size: 38rpx;
@@ -357,7 +228,7 @@ export default {
 //         }
 //     }
 // }
- .submit {
+.submit {
     width: 714rpx;
     height: 84rpx;
     background: #3882ee;

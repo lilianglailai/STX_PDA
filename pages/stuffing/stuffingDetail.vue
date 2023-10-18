@@ -9,7 +9,7 @@
                         style="color: red; margin-right: 10rpx"
                         >*</text
                     >
-                    {{ item.label }}:
+                    {{ item.label }}:<text class="grey" v-if="item.text" >{{item.text}}</text>
                 </view>
                 <uni-data-select
                     v-model="obj[item.prop]"
@@ -32,6 +32,7 @@
                     >
                 </picker>
                 <input
+                     :maxlength="item.maxlength||140"
                     v-else
                     :type="item.type || 'text'"
                     v-model="obj[item.prop]"
@@ -81,11 +82,13 @@ export default {
                     required: true,
                     label: this.$t("stuffingDetail.list.container_number"),
                     prop: "containerNo",
+                    maxlength:11,
+                    text:'前4个大写英文字母+7个数字，共11位'
                 },
                 {
                     required: true,
                     label: this.$t("stuffingDetail.list.date"),
-                    prop: "outTime",
+                    prop: "createDate",
                     slot: "date",
                     fn: this.dateChange.bind(null),
                     startDate: this.getDate("start"),
@@ -115,17 +118,35 @@ export default {
             if (a) {
                 return false;
             }
+           if ( !/^[A-Z]{4}[0-9]{7}$/.test(this.obj.containerNo)) {
+              uni.showModal({
+                title: '提示',
+                content: this.$t("stuffingDetail.list.container_number")+'前4个大写英文字母+7个数字，共11位',
+                success: function (res) {
+                    if (res.confirm) {
+                        console.log('用户点击确定');
+                    } else if (res.cancel) {
+                        console.log('用户点击取消');
+                    }
+                }
+              });
+              
+              return false
+           }
+          let createDate= this.obj.createDate+" 00:00:00"
+            
             this.loading = true;
             this.apifn({
                 url: "oms/v1/OrderWmsOut/create",
                 method: "post",
                 data: {
                     ...this.obj,
-                    warehouse: uni.getStorageSync("warehouse") || "东莞仓",
+                    warehouse: uni.getStorageSync("warehouse") || "深圳仓",
+                    createDate:createDate
                 },
             }).then(
                 (res) => {
-                    this.loading = false;
+                   
                     uni.showToast({
                         title: res.msg || "保存成功",
                         duration: 1500,
@@ -197,6 +218,17 @@ export default {
     /deep/ .uni-select {
         height: 84.38rpx;
     }
+     /deep/ .uni-select__input-text {
+        
+          font-weight: 500;
+           font-size: 38rpx;
+    }
+}
+.grey{
+    font-size: 28rpx;
+    color: #9f9f9f;
+    margin-left: 20rpx;
+    display: inline-block;
 }
 .submit {
     width: 714rpx;
@@ -209,4 +241,10 @@ export default {
     font-weight: bold;
     color: #ffffff;
 }
+</style>
+<style>
+/* ::-webkit-input-placeholder {  
+color: red; 
+} */
+
 </style>

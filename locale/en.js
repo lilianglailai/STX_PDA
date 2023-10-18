@@ -13,6 +13,7 @@ export default{
     succeed:"succeed",
     copy:"copy",
     err:"Failed, please contact the administrator",
+    minLength:"Add at least one new piece of data",
     login:{
         username:"username",
         password:"password",

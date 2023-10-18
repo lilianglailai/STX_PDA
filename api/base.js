@@ -1,23 +1,21 @@
 import VueI18n from 'vue-i18n'
 import Vue from 'vue'
 // let baseURL = 'http://192.168.1.60:8091/'
-let baseURL = 'http://192.168.1.60:80/'
-// let baseURL =  'http://192.168.1.15:9090/'
-// if (process.env.NODE_ENV == 'development') {
-//     baseURL = 'http://192.168.1.60:80/' // 开发环境37唐哥，10吴，60公用开发,55吴鹏
+// let baseURL = 'http://192.168.1.55:8092/'
+// let baseURL= "http://www.ilsau.cn/";
+ let baseURL
+
+if (process.env.NODE_ENV == 'development') {
+    baseURL = 'http://192.168.1.60:8091/' // 开发环境37唐哥，10吴，60公用开发,55吴鹏
              
  
-// } else {
-//     baseURL = 'http://192.168.1.60:80/' // 开发环境
- 
-// }
+} else {
+     
+    baseURL= "http://www.ilsau.cn/";
+}
 export default  baseURL 
 // export let baseURL= "http://www.ilsau.cn/jeecg-boot/";
-let token =uni.getStorageSync('token') ||undefined
-if (uni.getStorageSync('token')) {
-    token
-}
-
+ 
 import en from "../locale/en.js";
 import zh from "../locale/zh.js";
 let locale=uni.getStorageSync('locale') || 'zh'
@@ -39,9 +37,10 @@ export const myRequest = (options) => {
 			url: baseURL + options.url, 
 			method: options.method || 'GET',  
 			data: options.data || {}, 
-		    
+		    timeout:20000,
             header:{
-                'X-Access-Token':uni.getStorageSync('token')
+                'X-Access-Token':uni.getStorageSync('token'),
+                ...options.header
             },
 			// header: {
 			//    'Admin-Token':uni.getStorageSync('Admin-Token'), //自定义请求头信息
@@ -93,9 +92,24 @@ export const myRequest = (options) => {
 			},
 		 
 			fail: (err) => {
-	            
-				console.log(err)
-				reject(err)
+                
+                 if (err.errMsg.includes('timeout')) {
+                    uni.showToast({
+                        title: '请求接口超时，请检查网络',
+                         icon:"none"
+                    });
+                 }else  if (err.errMsg.includes('request:fail')) {
+                    uni.showToast({
+                        title: '请检查网络',
+                         icon:"none"
+                    });
+                    
+                  } 
+              
+		        setTimeout(() => {
+                    reject(err)
+                }, 1500);
+				
 			}
 		})
 	})

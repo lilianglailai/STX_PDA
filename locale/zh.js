@@ -13,6 +13,7 @@ export default{
     succeed:"成功",
     err:"失败，请联系管理员",
     copy:"拷贝",
+    minLength:"最少新增一条数据",
     login:{
         username:"账号",
         password:"密码",
@@ -20,12 +21,12 @@ export default{
     },
     home:{
         list:{
-            put:"入库",
+            put:"过线",
             out:"出库",
             search:"查询",
             check:"盘点",
             deliveryOrder:"换单",
-          
+            Handover:"入库",
             Signature:"卡派",
             stuffing:"装柜"
         }
@@ -34,11 +35,12 @@ export default{
     put:{
         placeholder:"请输入或扫描单号",
         upload:"请上传包裹图片",
-        err:"单号不存在"
+        err:"单号不存在",
+        title:"扫码过线",
     },
     putAdd:{
-        title:"入库信息",
-        showModal:"你已入库，是否二次入库"
+        title:"过线信息",
+        showModal:"你已过线，是否二次过线"
     },
     list:{
         oldCode:"单号",
@@ -48,7 +50,7 @@ export default{
         length:"长",
         width:"宽",
         weight:"重量",
-        createdDate:"入库时间"
+        createdDate:"过线时间"
     },
     set:{
        list:{
@@ -106,7 +108,10 @@ export default{
         }
      },
      signature:{
-        
+        Signature_Type:"Signature Type",
+        signatur:"Please provide your signatur",
+        delivery:"Please select a delivery type",
+
      },
      stuffingDetail:{
         list:{

@@ -1,53 +1,59 @@
 <template>
     <view class="router-box">
-        <Navigation :backTitle="$t('Handover.title')"></Navigation>
-          <view class="btn">
-        <view class="top-box">
-            <uni-easyinput
-                :focus="true"
-                type="text"
-                :placeholder="$t('Handover.placeholder')"
-                placeholder-class="placeholder"
-                v-model="number"
-                @confirm="getConfirm(number)"
-            />
-            <image src="/static/put/put.png" @click="scan" mode="widthFix" />
-          
-        </view>
-          <button
-                class="submit"
-                @click="add"
-                :loading="btnLoading"
-                :disabled="btnLoading"
-            >
-                <text class="add"> </text> 新增交接单
-            </button>
-       
-        </view>
-        <view class="list-title">{{ $t("record") }}</view>
-        <view class="content-box" v-if="list.length">
-            <view v-for="(item, index) in list" :key="index" class="flex-a" @click="go(item)">
-                <view class="flex1">
-                    <view class="black_title"
-                        >交接单号：{{ item.batchCode }}</view
-                    >
-                    <view
-                        >预报件数：
-                        <text class="blue">{{ item.parcelForecastCounts }}</text
-                        >{{ $t("deliveryOrderList.piece") }}
-                    </view>
-                    <view
-                        >实际交接件数：<text class="blue">{{
-                            item.parcelCounts
-                        }}</text>
-                        {{ $t("deliveryOrderList.piece") }}
-                    </view>
-                </view>
-                <image
-                    src="@/static/Handover/right_arrows.png"
-                    mode="widthFix"
-                    style="width: 25rpx; margin-left: 10rpx"
+        <Navigation :backTitle="'Menu'"></Navigation>
+        <view class="btn">
+            <view class="top-box">
+                <uni-easyinput
+                    :focus="true"
+                    type="text"
+                    :placeholder="'Please enter or scan the package'"
+                    placeholder-class="placeholder"
+                    v-model="number"
+                    @confirm="getBycode(number)"
                 />
+                <image
+                    src="/static/put/put.png"
+                    @click="scan"
+                    mode="widthFix"
+                />
+            </view>
+            <!-- <picker-col></picker-col> -->
+        </view>
+        <view class="list-title"
+            >Total HBL:
+            <text style="color: #d80b0b; margin-left: 20rpx">{{
+                list.length
+            }}</text>
+        </view>
+        <view class="content-box" v-if="list.length">
+            <view v-for="(item, index) in list" :key="index">
+                <view class="head-box flex-a">
+                    <text style="margin-right: 36rpx">
+                        HBL#:{{ item.hbl }}</text
+                    >
+                    <text style="margin-right: 36rpx"
+                        >0/{{
+                            (item.parcelList && item.parcelList.length) || 0
+                        }}PS</text
+                    >
+                    <button class="remove-btn flex-a" @click="del(index)">
+                        Remove
+                    </button>
+                </view>
+                <template v-if="item.parcelList.length">
+                    <view class="chlld-box">
+                        <view
+                            v-for="itemChlld in item.parcelList"
+                            :key="itemChlld.parcelCode"
+                            :class="{ isScan: itemChlld.isScan }"
+                        >
+                            <view class="flex-a">
+                                <view>{{ itemChlld.parcelCode }}</view>
+                                <view>{{ itemChlld.parcelWeight }}KG</view>
+                            </view>
+                        </view>
+                    </view>
+                </template>
             </view>
         </view>
         <view v-if="!list.length & !loading" class="tips_box">
@@ -58,7 +64,16 @@
             :contentText="{ contentrefresh: $t('loading') }"
             v-show="loading"
         ></uni-load-more>
-      
+        <view class="flex-c bottom-btn">
+            <button
+                class="submit"
+                :disabled="btnLoading"
+                :loading="btnLoading"
+                @click="submit"
+            >
+                Confirm
+            </button>
+        </view>
     </view>
 </template>
 
@@ -70,26 +85,17 @@ export default {
     data() {
         return {
             codeQueryTag: false,
-            codeQueryTag: false,
             number: "", //HYW1298000418
             list: [],
-            loading: false, //单独控制loading，别放在方法里面。uni.$emit的时候不需要loading
+            loading: false,
             pageNo: 1,
             pageSize: 10,
             total: "",
             btnLoading: false,
+            obj: {},
         };
     },
-    created: function (option) {
-        this.getList();
-        uni.$on("refresh", () => {
-            this.number = "";
-            this.list = [];
-            this.loading = true;
-            this.pageNo = 1;
-            this.getList();
-        });
-    },
+
     onShow() {
         // #ifdef APP
         this.initScan();
@@ -97,41 +103,35 @@ export default {
         // #endif
     },
     onHide() {
-        
+        // #ifdef APP
         this.stopScan();
+        // #endif
     },
     destroyed: function () {
         /*页面退出时一定要卸载监听,否则下次进来时会重复，造成扫一次出2个以上的结果*/
+        // #ifdef APP
         this.stopScan();
-
-        uni.$off("refresh");
-    },
-    onReachBottom() {
-        if (this.pageNo * this.pageSize < this.total && !this.loading) {
-            this.loading = true;
-            this.pageNo += 1;
-            this.getList(this.pageNo);
+        // #endif
+        if (this.list.length) {
+            uni.$emit("refresh");
         }
     },
+
+    onLoad(e) {
+        if (e?.refCode) {
+            // this.obj.refCode=e?.refCode
+            this.getBycode(e?.refCode);
+        }
+
+        console.log(this.obj);
+    },
     methods: {
-         getConfirm(code) {
-            if (this.codeQueryTag) return false;
-            this.getBycode(code);
-        },
-        go(item){ 
-             uni.navigateTo({
-                        url:
-                            "/pages/HandoverEdit/HandoverEdit?batchCode=" +
-                            item.batchCode,
-                    });
-        },
         add() {
             this.btnLoading = true;
             this.apifn({
                 url: "oms/v1/OrderParcelForecast/generateHandoverNo",
                 method: "get",
             }).then((res) => {
-                 
                 uni.navigateTo({
                     url:
                         "/pages/HandoverEdit/HandoverEdit?batchCode=" +
@@ -169,93 +169,158 @@ export default {
         queryCode(code) {
             // console.log(code);
             //防重复
-            if (this.codeQueryTag) return false;
-            this.codeQueryTag = true;
-            setTimeout(() => {
-                 this.codeQueryTag = false;
-            }, 1000);
-        
-            this.number = code;
+
             this.getBycode(code);
         },
-
+        del(item, index) {
+            // this.obj.parcelCode.splice(index, 1);
+            // this.setlocalStorage();
+            this.list.splice(index, 1);
+        },
         scan() {
-            if (this.codeQueryTag) {
-                return false;
-            }
-
             uni.scanCode({
                 success: (res) => {
-                    this.codeQueryTag = true;
                     this.getBycode(res.result);
                 },
             });
         },
 
         getBycode(code) {
-            console.log(code);
+            if (this.codeQueryTag) return false;
+            this.codeQueryTag = true;
+            if (!code.replace(/\s/g, "")) {
+                this.codeQueryTag = false;
+                return false;
+            }
+            this.number = code;
             uni.showLoading({
-                title: "加载中",
+                title: this.$t("loading"),
             });
             this.apifn({
                 url:
-                    "oms/v1/OrderParcelForecast/checkBatchCode?checkCode=" + code,
+                    "oms/v1/OrderAbroadDelivery/getDeliveryDetail?refCode=" +
+                    code,
                 method: "post",
             }).then(
                 (res) => {
-                     this.number=""
                     this.codeQueryTag = false;
+                    let body = res.body;
+                    if (res.body.parcelList.length) {
+                        if (this.list.length) {
+                            //是否同一个refCode
+
+                            let refCode = this.list.findIndex((item, index) => {
+                                if (item.hbl == res.body.hbl) return true;
+                            });
+
+                            if (refCode == -1) {
+                                body.parcelList.some((item, index) => {
+                                    if (code == item.parcelCode) {
+                                        body.parcelList[index].isScan = true;
+                                        return true;
+                                    }
+                                });
+                                this.list.unshift(res.body);
+                            } else {
+                                //点亮
+                                this.list[refCode].parcelList.some(
+                                    (item, index) => {
+                                        if (code == item.parcelCode) {
+                                            this.list[refCode].parcelList[
+                                                index
+                                            ].isScan = true;
+                                            return true;
+                                        }
+                                    }
+                                );
+                                this.$forceUpdate()
+                            }
+                        } else {
+                            //点亮
+
+                            body.parcelList.some((item, index) => {
+                                if (code == item.parcelCode) {
+                                    body.parcelList[index].isScan = true;
+                                    return true;
+                                }
+                            });
+                            this.list.unshift(body);
+                        }
+                    } else {
+                        uni.showToast({
+                            title: this.$t("not_data"),
+                            icon: "none",
+                        });
+                    }
+                    console.log(this.list);
                     uni.hideLoading();
-                    uni.navigateTo({
-                        url:
-                            "/pages/HandoverEdit/HandoverEdit?batchCode=" +
-                            code,
-                    });
+                    this.playsucc();
                 },
                 (err) => {
-                    console.log("err"+err);
+                    this.playfail();
                     this.codeQueryTag = false;
                     uni.hideLoading();
-                    uni.showModal({
-                        title: "提示",
-                        content: err.msg + "是否新增交接单",
-                        success:  (res)=> {
-                            if (res.confirm) {
-                                 this.number=""
-                                 this.add()
-                            } else if (res.cancel) {
-                                
-                            }
-                        },
-                    });
                 }
             );
         },
-        getList(page) {
-            this.apifn({
-                url: "oms/v1/OrderParcelForecast/listDailyHandOverNo",
-                method: "get",
-                // data: {
-                //     pageNo: page ? page : 1,
-                //     pageSize: page ? 10 : this.pageNo * 10,
-                //     scanCode: "",
-                // },
-            }).then(
-                (res) => {
-                    if (page) {
-                        this.list = this.list.concat(res?.result?.records);
-                    } else {
-                        this.list = res?.body;
-                        uni.hideLoading();
-                    }
+        submit() {
+            if (!this.list.length) {
+                uni.showToast({
+                    title: this.$t("minLength"),
+                    icon: "none",
+                });
+                return false;
+            }
+            let refCodeList = this.list
+                .map((res) => {
+                    return res.hbl;
+                })
+                .join(",");
+            //oms/v1/OrderAbroadDelivery/checkScanout?refCodeList="123456","1234"
+            //  this.apifn({
+            // url: "oms/v1/OrderAbroadDelivery/checkScanout?refCodeList="+refCodeList,
+            // method: "post",
+            // }).then(res=>{
 
-                    this.total = res?.result?.total;
-                    this.loading = false;
-                },
-                (err) => {
-                    this.loading = false;
+            // },
+            // err=>{
+
+            // }
+            // )
+            let noScan = this.list.some((res) => {
+                let a = res.parcelList.some((item) => {
+                    if (!item.isScan) {
+                        uni.showModal({
+                            title: "hint",
+                            cancelText: "cancel",
+                            confirmText: "confirm",
+                            content: `Please finish scanning the code ${res.hbl}  All the small packages`,
+                            success: function (res) {
+                                if (res.confirm) {
+                                } else if (res.cancel) {
+                                }
+                            },
+                        });
+                        return true;
+                    }
+                });
+                if (a) {
+                    return true;
                 }
+            });
+            // if (noScan) {
+            //     return false;
+            // }
+            //  let list=this.list.map((res=>{
+            //     return
+            //  }))
+            uni.setStorageSync(
+                "signatureDetailDTOList",
+                JSON.stringify(this.list)
             );
+            uni.navigateTo({
+                url: "../signature/signature",
+            });
         },
     },
 };
@@ -265,7 +330,6 @@ export default {
 
 <style  lang='scss'>
 .top-box {
- 
     position: relative;
     /deep/ .is-input-border {
         border: unset !important;
@@ -293,46 +357,58 @@ export default {
     }
 }
 .content-box {
-    font-size: 38rpx;
+    font-size: 31rpx;
     font-weight: 500;
-    color: #999999;
-    
-  
-    .flex1 > view:not(:last-child) {
-        margin-bottom: 20rpx;
-    }
+    color: #333333;
     > view {
-        margin-top: 15.6rpx;
-        padding: 25rpx 50rpx 25rpx 37rpx;
-        background: white;
+        margin-bottom: 15rpx;
     }
-    .black_title {
-        font-size: 38rpx;
-        font-weight: 500;
-        color: #333333;
-    }
-    .artery {
-        display: flex;
-        justify-content: space-between;
-        .right {
-            font-size: 38rpx;
-            font-weight: bold;
-            color: #a4a4a4;
-        }
-    }
-    .img-box {
-        display: flex;
+    .head-box {
         flex-wrap: wrap;
-        image {
-            width: 125.47rpx;
-            margin: 26rpx;
+        height: 97rpx;
+        background: #ffffff;
+        margin-bottom: 12.5rpx;
+        padding-left: 38rpx;
+    }
+    .remove-btn {
+        height: 67rpx;
+        background: #3882ee;
+        border-radius: 9rpx;
+        font-size: 38rpx;
+        font-weight: 400;
+        color: #ffffff;
+        margin-left: 10rpx;
+        padding: 0 12rpx;
+    }
+    .chlld-box {
+        background: white;
+        color: #999999;
+        > view {
+            padding-left: 46rpx;
+            padding-right: 62rpx;
+
+            > view {
+                justify-content: space-between;
+                height: 75rpx;
+                padding-left: 34rpx;
+                padding-right: 120rpx;
+            }
+        }
+        > view:not(:last-child) {
+            > view {
+                border-bottom: 2rpx solid #ededed;
+            }
+        }
+        .isScan {
+            background: #cbddf7;
+            color: black;
         }
     }
 }
 .list-title {
-      margin-top: 217rpx;
+    margin-top: 103rpx;
     padding: 16rpx 0 16rpx 22rpx;
-    height: 36rpx;
+
     font-size: 38rpx;
     font-weight: bold;
     color: #3882ee;
@@ -343,49 +419,29 @@ export default {
 .btn {
     z-index: 999;
     position: fixed;
-    top:  calc(var(--status-bar-height) + 116rpx);
-       background: #F2F2F2;
+    top: calc(var(--status-bar-height) + 116rpx);
+    background: #f2f2f2;
     padding: 16rpx 0;
     width: 100%;
-    .add {
-        position: relative;
-        // width: 38.75rpx;
-        margin-right: 64rpx;
-        &::before {
-            position: absolute;
-            content: "";
-            width: 4rpx;
-            height: 38.75rpx;
-            background: white;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        &::after {
-            content: "";
-            width: 38.75rpx;
-            height: 4rpx;
-            position: absolute;
-            background: white;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    }
+}
+.bottom-btn {
+    z-index: 999;
+    position: fixed;
+    bottom: 10px;
+    padding: 20rpx 0;
+    width: 100%;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 .submit {
     width: 714rpx;
     height: 84rpx;
     background: #3882ee;
     border-radius: 9rpx;
-    margin-top: 16rpx;
+    margin: 16rpx auto 0;
     font-size: 47rpx;
     line-height: 84rpx;
     font-weight: bold;
     color: #ffffff;
-
-    &::after {
-        border: none;
-    }
 }
 </style>

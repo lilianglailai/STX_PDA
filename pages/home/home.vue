@@ -2,7 +2,7 @@
     <view class="router-box">
         <Navigation
             :backShow="false"
-            backTitle="菜单(东莞仓)"
+            backTitle="菜单(深圳仓)"
             
         ></Navigation>
         
@@ -34,9 +34,10 @@ export default {
                 {
                     img: require("@/static/home/out.png"),
                     url: "/pages/out/out",
-                    titile:  this.$t('home.list.out'),
-                    disabled:true
+                    titile:  "Scan Out",
+                    
                 },
+                 {titile:"Signature",url:'/pages/caPai/caPai', img: require("@/static/home/caPai.png") },
                 {
                     img: require("@/static/home/search.png"),
                     url: "/pages/search/search",
@@ -55,12 +56,13 @@ export default {
                     titile: this.$t('home.list.deliveryOrder'),
                     
                 },
-                 {titile:this.$t('home.list.Signature'),url:'/pages/caPai/caPai', img: require("@/static/home/caPai.png") },
-                  {titile:"收货-交接",url:'/pages/Handover/Handover', img: require("@/static/home/Handover.png")},
+                
+                  {titile:this.$t('home.list.Handover'),url:'/pages/Handover/Handover', img: require("@/static/home/Handover.png")},
                    {titile:this.$t('home.list.stuffing'), img: require("@/static/home/stuffing.png"),   url: "/pages/stuffing/stuffing"},
                 {titile:this.$t('setup'),url:'/pages/set/set', img: require("@/static/home/set.png")},
                
-               
+                // {titile:this.$t('setup'),url:'/pages/cs/cs', img: require("@/static/home/set.png")},
+                
             ],
         };
     },

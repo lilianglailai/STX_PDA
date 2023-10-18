@@ -3,12 +3,11 @@
         <Navigation :backTitle="'交接单编辑'"></Navigation>
         <view class="top-box">
             <uni-easyinput
-               
                 type="text"
                 :placeholder="$t('HandoverEdit.placeholder')"
                 placeholder-class="placeholder"
                 v-model="number"
-                @confirm="getConfirm(number)"
+                @confirm="getBycode(number)"
             />
             <image src="/static/put/put.png" @click="scan" mode="widthFix" />
         </view>
@@ -25,26 +24,27 @@
                 件</view
             >
         </view>
-       <view style="padding-bottom: 120rpx;">
+        <view style="padding-bottom: 120rpx">
+            <uni-load-more
+                status="loading"
+                :contentText="{ contentrefresh: $t('loading') }"
+                v-show="loading"
+            ></uni-load-more>
 
-     
-        <transition-group tag="view" name="list" class="content-box">
-            <view
-                class="flex-a"
-                v-for="item in obj.parcelCode"
-                :key="item"  
-            >
-            <!-- key是关键 -->
-                <view class="flex1">{{ item }}</view>
-                <button
-                    class="Handover-btn flex-a flex-c"
-                    @click="del(item, index)"
-                >
-                    移除
-                </button>
-            </view>
-        </transition-group>
-          </view>
+            <transition-group tag="view" name="list" class="content-box">
+                <view class="flex-a" v-for="item in obj.parcelCode" :key="item">
+                    <!-- key是关键 -->
+                    <view class="flex1">{{ item }}</view>
+                    <button
+                        :disabled="codeQueryTag"
+                        class="Handover-btn flex-a flex-c"
+                        @click="del(item, index)"
+                    >
+                        移除
+                    </button>
+                </view>
+            </transition-group>
+        </view>
         <view class="btn flex-c">
             <!-- <button
                 class="submit"
@@ -103,19 +103,20 @@ export default {
     data() {
         return {
             codeQueryTag: false,
-      
+
             number: "", //HYW1298000418
             list: [],
             obj: {
                 parcelCode: [], //关键
             },
             err: [],
+            bntloading: false,
             loading: false,
             // update: false,
             HandoverEditList: [],
             time: null,
             index: undefined,
-            warehouse: uni.getStorageSync("warehouse") || "东莞仓",
+            warehouse: uni.getStorageSync("warehouse") || "深圳仓",
         };
     },
     created() {
@@ -125,6 +126,7 @@ export default {
         // #endif
     },
     destroyed() {
+        uni.$emit("refresh");
         // #ifdef APP
         this.stopScan();
 
@@ -170,32 +172,22 @@ export default {
         stopScan() {
             Editmain.unregisterReceiver(Editreceiver);
         },
-         getConfirm(code) { 
-            if (this.codeQueryTag) return false;
-            this.getBycode(code);
-        },
+
         queryCode(code) {
             //防重复
-            if (this.codeQueryTag) return false;
-            this.codeQueryTag = true;  
-            this.number = code;
+
             this.getBycode(code);
         },
         scan() {
-            if (this.codeQueryTag) {
-                return false;
-            }
-
             uni.scanCode({
                 success: (res) => {
-                    this.codeQueryTag = true;
                     this.getBycode(res.result);
                 },
             });
         },
         del(item, index) {
             uni.showLoading({
-                title: "加载中",
+                title: this.$t('loading'),
                 mask: true,
             });
             // this.obj.parcelCode.splice(index, 1);
@@ -205,16 +197,16 @@ export default {
                 data: {
                     batchCode: this.obj.batchCode,
                     orderNos: [item],
-                    warehouse: uni.getStorageSync("warehouse") || "东莞仓",
+                    warehouse: uni.getStorageSync("warehouse") || "深圳仓",
                 },
             }).then(
                 (res) => {
                     uni.showToast({
                         title: res.body,
                         duration: 1500,
-                         icon: "none",
+                        icon: "none",
                     });
-                    this.obj.parcelCode.splice(index, 1);
+
                     this.getDetails();
                 },
                 (err) => {
@@ -227,10 +219,8 @@ export default {
             // this.setlocalStorage();
         },
         update(code) {
-             
             uni.showLoading({
-                title: "加载中",
-                mask: true,
+                title: this.$t('loading'),
             });
             this.apifn({
                 url: "oms/v1/OrderParcelForecast/confirmSubmit",
@@ -238,32 +228,29 @@ export default {
                 data: {
                     batchCode: this.obj.batchCode,
                     orderNos: [code],
-                    warehouse: uni.getStorageSync("warehouse") || "东莞仓",
+                    warehouse: uni.getStorageSync("warehouse") || "深圳仓",
                 },
             }).then(
                 (res) => {
-                     this.number = "";
-                    this.codeQueryTag=false
+                    this.number = "";
+                    this.codeQueryTag = false;
                     uni.showToast({
                         title: res.body,
                         duration: 1000,
-                        icon:'none'
+                        icon: "none",
                     });
-                    this.obj.parcelCode.unshift(code);
+                    this.playsucc()
                     this.getDetails();
                 },
                 (err) => {
-                     this.number = "";
+                    this.number = "";
                     uni.hideLoading();
-                    this.loading = false;
-                    this.codeQueryTag=false
+                    this.playfail()
+                    this.codeQueryTag = false;
                     this.getDetails();
                     if (err.body) {
                         this.$refs.popup.open();
                         this.err = err.body;
-                        if (!this.err[3].length) {
-                            this.obj.parcelCode.unshift(code);
-                        }
                     } else {
                         uni.showToast({
                             title: err.msg,
@@ -274,12 +261,11 @@ export default {
             );
         },
         submit() {
-            uni.$emit("refresh");
             uni.navigateBack({
                 delta: 1,
             });
             return false;
-         
+
             if (!this.obj.parcelCode.length) {
                 uni.showToast({
                     title: "至少扫码一个包裹",
@@ -289,14 +275,14 @@ export default {
                 return false;
             }
 
-            this.loading = true;
+            this.bntloading = true;
             this.apifn({
                 url: "oms/v1/OrderParcelForecast/confirmSubmit",
                 method: "post",
                 data: {
                     batchCode: this.obj.batchCode,
                     orderNos: this.obj.parcelCode,
-                    warehouse: uni.getStorageSync("warehouse") || "东莞仓",
+                    warehouse: uni.getStorageSync("warehouse") || "深圳仓",
                 },
             }).then(
                 (res) => {
@@ -306,7 +292,7 @@ export default {
                     });
                 },
                 (err) => {
-                    this.loading = false;
+                    this.bntloading = false;
                     if (err.body) {
                         this.$refs.popup.open();
                         this.err = err.body;
@@ -324,12 +310,13 @@ export default {
             );
         },
         getBycode(code) {
-           if (!code) {
-             this.codeQueryTag=false
-            return false
-           
-           }
-           
+            if (this.codeQueryTag) return false;
+            this.codeQueryTag = true;
+            if (!code.replace(/\s/g, "")) {
+                this.codeQueryTag = false;
+                return false;
+            }
+            this.number = code;
             let index = undefined;
             index = this.obj.parcelCode.findIndex((res) => code == res);
             if (index != -1) {
@@ -339,39 +326,40 @@ export default {
                     duration: 1500,
                     icon: "none",
                 });
-                this.codeQueryTag=false
+                this.playfail()
+                this.codeQueryTag = false;
             } else {
                 // this.obj.parcelCode.unshift(code);
                 this.update(code);
-                // if (this.index == undefined ) {
-                //     this.HandoverEditList.push({ ...this.obj });
-                //     this.index = this.HandoverEditList.length - 1;
-                // } else {
-                //     this.HandoverEditList[this.index] = this.obj;
-                // }
-                // this.setlocalStorage();
+
             }
         },
         getDetails() {
+            this.loading = true;
             this.apifn({
                 url:
                     "oms/v1/OrderParcelForecast/checkBatchCode?checkCode=" +
                     this.obj.batchCode,
                 method: "post",
-            }).then((res) => {
-                if (!this.obj.parcelCounts) {
-                    this.obj = res?.body;
-                } else {
-                    this.obj.parcelCounts = res?.body?.parcelCounts;
-                    this.obj.parcelForecastCounts =
-                        res?.body.parcelForecastCounts;
+            }).then(
+                (res) => {
+                    this.loading = false;
+                    let obj = res?.body || {};
+                    if (!obj.parcelCode) {
+                        obj.parcelCode = [];
+                    }
+
+                    this.obj = obj;
+                },
+                (err) => {
+                    this.loading = false;
                 }
-            });
+            );
         },
 
         setlocalStorage() {
             uni.setStorageSync(
-                "HandoverEditList",
+                "caPaiList",
                 JSON.stringify(this.HandoverEditList)
             );
         },
@@ -402,7 +390,7 @@ export default {
 <style  lang='scss' scoped>
 .top-box {
     position: relative;
-    background: #F2F2F2;
+    background: #f2f2f2;
     /deep/ .is-input-border {
         border: unset !important;
     }
@@ -450,8 +438,6 @@ export default {
     line-height: 96rpx;
 }
 .content-box {
-    
-   
     > view {
         height: 133rpx;
         background: #ffffff;

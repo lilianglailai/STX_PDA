@@ -1,6 +1,6 @@
 <template>
     <view class="router-box">
-        <Navigation :backTitle="$t('submit')"></Navigation>
+        <Navigation :backTitle="$t('put.title')"></Navigation>
         <view class="top-box">
             <uni-easyinput
                 :focus="true"
@@ -8,7 +8,7 @@
                 :placeholder="$t('put.placeholder')"
                 placeholder-class="placeholder"
                 v-model="number"
-                @confirm="getConfirm(number)"
+                @confirm="getBycode(number)"
             />
             <image src="/static/put/put.png" @click="scan" mode="widthFix" />
         </view>
@@ -19,7 +19,6 @@
 
 <script>
 var main, receiver, filter;
-var _codeQueryTag = false;
 import List from "@/components/list/list.vue";
 export default {
     components: { List },
@@ -34,15 +33,16 @@ export default {
     },
     created: function (option) {
         // this.show = true
+
         uni.$on("refresh", () => {
             this.number = "";
             let _this = this.$refs.list;
-             _this.loading = true;
+            _this.loading = true;
             _this.pageNo = 1;
-           _this.getList();
-            
+            _this.getList();
         });
     },
+
     onShow() {
         // #ifdef APP
         this.initScan();
@@ -51,6 +51,7 @@ export default {
     },
     onHide() {
         // #ifdef APP
+
         this.stopScan();
         // #endif
     },
@@ -70,10 +71,6 @@ export default {
         }
     },
     methods: {
-          getConfirm(code) {
-            if (this.codeQueryTag) return false;
-            this.getBycode(code);
-        },
         initScan() {
             let _this = this;
             main = plus.android.runtimeMainActivity(); //获取activity
@@ -86,6 +83,7 @@ export default {
                 "io.dcloud.feature.internal.reflect.BroadcastReceiver",
                 {
                     onReceive: function (context, intent) {
+                         console.log(111);
                         plus.android.importClass(intent);
                         let code = intent.getStringExtra("barcode_string"); // 换你的广播标签
                         _this.queryCode(code);
@@ -99,31 +97,31 @@ export default {
         stopScan() {
             main.unregisterReceiver(receiver);
         },
-        queryCode (code) {
-            //防重复
-            if (this.codeQueryTag) return false;
-             this.codeQueryTag
-           
-            this.number = code;
+        queryCode(code) {
+             
             this.getBycode(code);
         },
 
         scan() {
-            if (this.codeQueryTag) {
-                return false;
-            }
-
+          
             uni.scanCode({
                 success: (res) => {
-                    this.codeQueryTag = true;
                     this.getBycode(res.result);
                 },
             });
         },
 
         getBycode(code) {
+            console.log(222);
+            if (this.codeQueryTag) return false;
+            this.codeQueryTag = true;
+            if (!code.replace(/\s/g, "")) {
+                this.codeQueryTag = false;
+                return false;
+            }
+            this.number = code;
             uni.showLoading({
-                title: "加载中",
+                title: this.$t('loading'),
             });
             this.apifn({
                 url: "jeecg-boot/pda/api/v1/findChannelNameByCode",
@@ -133,7 +131,6 @@ export default {
                 },
             }).then(
                 (res) => {
-                    this.codeQueryTag = false;
                     if (res.result) {
                         let obj = {};
                         obj.scanCode = code;
@@ -147,20 +144,16 @@ export default {
                         }
                         uni.hideLoading();
                         this.$store.commit("setputObj", obj);
-                        // #ifdef APP
-                        this.stopScan();
-                        // #endif
+                        this.codeQueryTag = false;
                         uni.navigateTo({
                             url: "/pages/putAdd/putAdd",
                         });
+                         this.playsucc()
                     } else {
-                        const innerAudioContext = uni.createInnerAudioContext();
-                        innerAudioContext.autoplay = true;
-                        innerAudioContext.src = `https://tts.baidu.com/text2audio.mp3?tex=${this.$t(
-                            "put.err"
-                        )}&cuid=baike&amp&lan=ZH&amp&ctp=1&amp&pdt=301&amp&vol=100&amp&rate=32&amp`;
-                        
-                        innerAudioContext.onPlay(() => {});
+                        this.codeQueryTag = false;
+                       
+                        this.playfail()
+                      
                         uni.showToast({
                             title: this.$t("put.err"),
                             icon: "none",
@@ -204,7 +197,7 @@ export default {
         color: #949494;
     }
 }
- 
+
 .list-title {
     padding: 16rpx 0 16rpx 22rpx;
     height: 36rpx;

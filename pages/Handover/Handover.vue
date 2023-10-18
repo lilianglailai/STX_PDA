@@ -4,12 +4,11 @@
         <view class="btn">
             <view class="top-box">
                 <uni-easyinput
-                    
                     type="text"
                     :placeholder="$t('Handover.placeholder')"
                     placeholder-class="placeholder"
                     v-model="number"
-                    @confirm="getConfirm(number)"
+                    @confirm="getBycode(number)"
                 />
 
                 <image
@@ -27,9 +26,8 @@
                 <text class="add"> </text> 新增交接单
             </button>
         </view>
-
+        <view class="list-title">{{ $t("record") }}</view>
         <view v-if="list.length">
-            <view class="list-title">{{ $t("record") }}</view>
             <view class="content-box">
                 <view
                     v-for="(item, index) in list"
@@ -71,6 +69,23 @@
             :contentText="{ contentrefresh: $t('loading') }"
             v-show="loading"
         ></uni-load-more>
+        <uni-popup ref="popup" class="handover-popup">
+            <view class="box">
+                <view class="title"> 提示 </view>
+                <view class="main-text">单号不存在，是否新增交接单?</view>
+                <view class="btn-box flex">
+                    <button
+                        class="confirm-bnt flex-a flex-c"
+                        @click="popConfirm"
+                    >
+                        确定
+                    </button>
+                    <button class="cancel-bnt flex-a flex-c" @click="popCancel">
+                        取消
+                    </button>
+                </view>
+            </view>
+        </uni-popup>
     </view>
 </template>
 
@@ -85,14 +100,14 @@ export default {
 
             number: "", //HYW1298000418
             list: [],
-            loading: false, //单独控制loading，别放在方法里面。uni.$emit的时候不需要loading
+            loading: true, //单独控制loading，别放在方法里面。uni.$emit的时候不需要loading
             pageNo: 1,
             pageSize: 10,
             total: 0,
             btnLoading: false,
         };
     },
-    created: function (option) {
+    created: function (option) { 
         this.getList();
         uni.$on("refresh", () => {
             this.number = "";
@@ -102,20 +117,18 @@ export default {
             this.getList();
         });
     },
+    // watch: {
+    //     codeQueryTag(val) {
+    //         console.log(val);
+    //     },
+    // },
     onShow() {
-         
         // #ifdef APP
-        this.$nextTick( ()=> {
-             this.initScan();
-             this.startScan();
-        })
-         
-        
-       
+        this.initScan();
+        this.startScan();
         // #endif
     },
     onHide() {
-        console.log('onHide');
         // #ifdef APP
         this.stopScan();
         // #endif
@@ -132,14 +145,20 @@ export default {
             this.pageNo += 1;
             this.getList(this.pageNo);
         }
-    }, 
+    },
     methods: {
-        getConfirm(code) {
-            if (this.codeQueryTag) return false;
-            this.getBycode(code);
+        popConfirm() {
+            this.number = "";
+            this.add();
+            this.codeQueryTag = false;
+            this.$refs.popup.close();
         },
+        popCancel() {
+            this.$refs.popup.close();
+            this.codeQueryTag = false;
+        },
+       
         go(item) {
-          
             uni.navigateTo({
                 url:
                     "/pages/HandoverEdit/HandoverEdit?batchCode=" +
@@ -152,7 +171,6 @@ export default {
                 url: "oms/v1/OrderParcelForecast/generateHandoverNo",
                 method: "get",
             }).then((res) => {
-            
                 uni.navigateTo({
                     url:
                         "/pages/HandoverEdit/HandoverEdit?batchCode=" +
@@ -175,7 +193,7 @@ export default {
                     onReceive: function (context, intent) {
                         plus.android.importClass(intent);
                         let code = intent.getStringExtra("barcode_string"); // 换你的广播标签
-                        // console.log("我是"+code);
+
                         _this.queryCode(code);
                     },
                 }
@@ -189,31 +207,32 @@ export default {
         },
         queryCode(code) {
             //防重复
-            console.log("扫码"+queryCode);
-            if (this.codeQueryTag) return false;
-    
-            
-            this.number = code;
+      
             this.getBycode(code);
         },
 
         scan() {
-            if (this.codeQueryTag) {
-                return false;
-            }
+          
 
             uni.scanCode({
                 success: (res) => {
-                    this.codeQueryTag = true;
+                   
+                   
                     this.getBycode(res.result);
                 },
             });
         },
 
         getBycode(code) {
-            
+            if (this.codeQueryTag) return false;
+            this.codeQueryTag = true;
+            if (!code.replace(/\s/g, "")) {
+                this.codeQueryTag = false;
+                return false;
+            }
+            this.number = code;
             uni.showLoading({
-                title: "加载中",
+                title: this.$t('loading'),
             });
             this.apifn({
                 url:
@@ -225,7 +244,7 @@ export default {
                     this.number = "";
                     this.codeQueryTag = false;
                     uni.hideLoading();
-                     
+                    this.playsucc()
                     uni.navigateTo({
                         url:
                             "/pages/HandoverEdit/HandoverEdit?batchCode=" +
@@ -233,24 +252,9 @@ export default {
                     });
                 },
                 (err) => {
+                    this.playfail()
+                    this.$refs.popup.open();
                     uni.hideLoading();
-                    setTimeout(() => {
-                        uni.showModal({
-                        title: "提示",
-                        content: err.msg + "是否新增交接单",
-                        success: (res) => {
-                           
-                            if (res.confirm) {
-                                this.number = "";
-                                this.add();
-                                this.codeQueryTag = false;
-                            } else if (res.cancel) {
-                                this.codeQueryTag = false;
-                            }
-                        },
-                    });
-                    }, 0);
-                    
                 }
             );
         },
@@ -332,23 +336,8 @@ export default {
         font-weight: 500;
         color: #333333;
     }
-    .artery {
-        display: flex;
-        justify-content: space-between;
-        .right {
-            font-size: 38rpx;
-            font-weight: bold;
-            color: #a4a4a4;
-        }
-    }
-    .img-box {
-        display: flex;
-        flex-wrap: wrap;
-        image {
-            width: 125.47rpx;
-            margin: 26rpx;
-        }
-    }
+   
+    
 }
 .list-title {
     margin-top: 217rpx;
@@ -362,7 +351,7 @@ export default {
     color: #3882ee;
 }
 .btn {
-    z-index: 999;
+    z-index: 9;
     position: fixed;
     top: calc(var(--status-bar-height) + 116rpx);
     background: #f2f2f2;
@@ -407,6 +396,54 @@ export default {
 
     &::after {
         border: none;
+    }
+}
+.handover-popup {
+    .box {
+        width: 713rpx;
+        height: 470rpx;
+        background: #ffffff;
+        border-radius: 9rpx;
+        overflow: auto;
+        .title {
+            font-size: 50rpx;
+            font-weight: 800;
+            color: #3882ee;
+            text-align: center;
+            margin-top: 52rpx;
+            margin-bottom: 72rpx;
+        }
+        .main-text {
+            font-size: 38rpx;
+            font-weight: 800;
+            color: #666666;
+            margin-bottom: 76rpx;
+            text-align: center;
+        }
+        .btn-box {
+            width: 597rpx;
+            margin: 0 auto;
+            justify-content: space-between;
+            > button {
+                width: 283rpx;
+                height: 84rpx;
+                border-radius: 9rpx;
+                font-size: 47rpx;
+                font-weight: 500;
+                color: #3882ee;
+                &::after {
+                    border: none;
+                }
+            }
+            .confirm-bnt {
+                color: white;
+                background: #3882ee;
+            }
+            .cancel-bnt {
+                background: white;
+                border: 2px solid #3882ee;
+            }
+        }
     }
 }
 </style>

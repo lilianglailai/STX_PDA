@@ -368,6 +368,18 @@
 						this.setSuccessAndError(result.tempFiles)
 					})
 					.catch(err => {
+                        uni.showModal({
+                            title: '提示',
+                            content: '请在打开：设置- 应用- EntryScanning中。打开相册权限',
+                            success: function (res) {
+                                if (res.confirm) {
+                                    console.log('用户点击确定');
+                                } else if (res.cancel) {
+                                    console.log('用户点击取消');
+                                }
+                            }
+                        });
+                      
 						console.log('选择失败', err)
 					})
 			},

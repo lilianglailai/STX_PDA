@@ -3,7 +3,10 @@ import App from './App'
  
 // #ifndef VUE3
 import baseURL,{ myRequest ,i18n} from "./api/base.js"
+import { fail,succ } from "./playMp3/play.js";
 Vue.prototype.apifn = myRequest
+Vue.prototype.playfail = fail
+Vue.prototype.playsucc = succ
  
 Vue.prototype.apiUrl = baseURL
 import store from './store'  
