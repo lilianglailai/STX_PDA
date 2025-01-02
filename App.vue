@@ -13,13 +13,10 @@ export default {
     update() {
       this.apifn({
         url: `pad/v1/client/appUpdate/newObject`,  //请求接口
-
       }).then(res => {
         let versions = res.data.versionName
         let apkUrl = res.data.apkUrl
-        plus.runtime.getProperty(plus.runtime.appid, (inf) => {
-          console.log(inf.version,versions);
-          
+        plus.runtime.getProperty(plus.runtime.appid, (inf) => { 
           if (inf.version != versions) {
             uni.showModal({
               title: this.$t('updateFn.title'),
@@ -35,7 +32,6 @@ export default {
       },
         err => {
           console.log(err);
-
         }
       )
     },
@@ -81,8 +77,7 @@ export default {
         showLoading.setTitle(this.$t('updateFn.downloading') + res.progress + "%  ");
         if (res.progress == 100) {
           plus.nativeUI.closeWaiting();
-        }
-
+        } 
       });
     }
 
@@ -90,8 +85,24 @@ export default {
   },
   created() {
     // #ifdef APP 
-    this.update()
+    // this.update()
+    let token= uni.getStorageSync('token');  //通过token判断是否登录
+    console.log(token,'token');
+    
+    if (token) {
+        //存在则关闭启动页进入首页
+        plus.navigator.closeSplashscreen();
+    } else {
+        //不存在则跳转至登录页
+        uni.reLaunch({
+            url: "/pages/login/login",
+            success: () => {
+                plus.navigator.closeSplashscreen();
+            }
+        })
+    }
     // #endif 
+    
   },
 
 }
