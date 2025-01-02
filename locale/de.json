@@ -1,0 +1,69 @@
+{
+    "my.title": "Persönliches Zentrum",
+    "my.exit": "Abmelden",
+    "forecast.receipt": "Prognostizierte Zugänge",
+    "forecast.receipt.detail": "Details zum prognostizierten Eingang",
+    "forecast.packagedata": "Flurstücksdaten",
+    "temporary.counting": "Temporäre Inventur",
+    "temporary.counting.add": "Vorübergehende Inventarbearbeitungen",
+    "numberDuplication": "Die Sendungsverfolgungsnummer befindet sich bereits in der Zeile {num} der Liste",
+    "cancel": "Abbrechen",
+    "Package_number": "Flurstücksnummer",
+    "quantity": "Anzahl der Teile",
+    "detail": "Detail",
+    "viewdata":"Daten anzeigen",
+    "exit": "verlassen",
+    "submit": "Senden",
+    "empty": "leer",
+    "update_password": "Ändern Sie Ihr Passwort",
+    "update": "revidieren",
+    "search": "Suchen",
+    "not_data": "Noch keine Daten",
+    "loading": "Laden",
+    "please": "Bitte geben Sie {label} ein",
+    "select": "Bitte wählen Sie {label}",
+    "weight": "Gewicht",
+    "setup": "Aufstellen",
+    "record": "Intraday-Rekorde",
+    "succeed": "gelingen",
+    "err": "fehlgeschlagen, wenden Sie sich an den Administrator",
+    "copy": "kopieren",
+    "minLength": "Mindestens ein Datenelement muss hinzugefügt werden",
+    "language-change-confirm": "Wenn Sie diese Einstellung anwenden, wird die App neu gestartet",
+    "forecast": {
+        "container-number": "Nummer des Behälters",
+        "client": "Kunde",
+        "Temporary-stock-box": "Temporäre Lagerboxen",
+        "submit": "Versiegelt und verpackt",
+        "clientinconformity": "Der Kunde des Pakets ist nicht derselbe wie der Kunde des aktuellen Containers"
+    },
+    "forecastLpn": {
+        "clientNum": "Seriennummer des Kunden"
+    },
+    "home": {
+        "Storage-module": "Inbound-Modul"
+    },
+    "login": {
+        "username": "Konto",
+        "password": "Passwort",
+        "login": "Treppenabsatz"
+    },
+    "my": {
+        "warehouse": "Das Lager, zu dem es gehört"
+    },
+    "lpn": {
+        "submit": "Bestimmen Sie die Stückzahl"
+    },
+    "put": {
+        "placeholder": "Bitte geben Sie die Nummer ein oder scannen Sie sie",
+        "upload": "Bitte laden Sie ein Bild des Pakets hoch",
+        "err": "Die Sendungsverfolgungsnummer existiert nicht",
+        "title": "Scannen Sie den Code, um die Linie zu überschreiten"
+    },
+    "forecastdetail": {
+        "customerNumber": "Kundencode",
+        "packingTime": "Packzeit",
+        "accomplish_time": "Versiegelungszeit",
+        "code_scan_pack": "Scancode und Verpackung"
+    }
+}

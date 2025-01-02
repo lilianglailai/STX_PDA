@@ -1,27 +1,38 @@
 <template>
-    <view class="router-box">
-        <Navigation :backTitle="$t('put.title')"></Navigation>
+    <view>
+        <!-- <Navigation :backTitle="$t('put.title')"></Navigation> -->
         <view class="top-box">
-            <uni-easyinput
-                :focus="true"
-                type="text"
-                :placeholder="$t('put.placeholder')"
-                placeholder-class="placeholder"
-                v-model="number"
-                @confirm="getBycode(number)"
-            />
-            <image src="/static/put/put.png" @click="scan" mode="widthFix" />
+            <view class="flex" style="margin: 0px 5px">
+                <uni-easyinput :focus="true" class="flex1" type="text" :placeholder="$t('put.placeholder')"
+                    placeholder-class="placeholder" v-model="number" @confirm="getBycode(number)" />
+
+                <button class="scan-submit" @click="getBycode(number)">{{$t('search')}}</button>
+            </view>
         </view>
-        <view class="list-title">{{ $t("record") }}</view>
-        <List ref="list"></List>
+        <view class="list-title"> {{ $t('quantity') }}：{{ list.length }}</view>
+
+
+        <transition-group tag="view" name="list" class="content-box">
+            <view class="flex-a" v-for="(item, index) in list" :key="item.palletContainerNum">
+                <!-- key是关键 -->
+                <view class="flex1">
+                    <view class="code">{{ item.palletContainerNum }}</view>
+                    <view>客户序号:{{ item.clientNumber }}</view>
+                </view>
+                <button :disabled="codeQueryTag" class="cancel flex-a flex-c" @click="del(index)">
+                    取消
+                </button>
+            </view>
+        </transition-group>
+        <button class="confirm" @click="submit">{{ $t('submit') }}</button>
+        <!-- <List ref="list"></List> -->
     </view>
 </template>
 
 <script>
-var main, receiver, filter;
-import List from "@/components/list/list.vue";
+var main, receiver, filter; 
 export default {
-    components: { List },
+
     name: "put",
     data() {
         return {
@@ -30,45 +41,22 @@ export default {
             list: [],
             number: "", //HYW1298000418
         };
-    },
-    created: function (option) {
-        // this.show = true
-
-        uni.$on("refresh", () => {
-            this.number = "";
-            let _this = this.$refs.list;
-            _this.loading = true;
-            _this.pageNo = 1;
-            _this.getList();
-        });
-    },
-
-    onShow() {
-        // #ifdef APP
+    }, 
+    onShow() { 
+        // #ifdef APP 
         this.initScan();
         this.startScan();
         // #endif
     },
     onHide() {
         // #ifdef APP
-
         this.stopScan();
         // #endif
     },
     destroyed: function () {
-        // #ifdef APP
-
+        // #ifdef APP 
         this.stopScan();
-        // #endif
-        uni.$off("refresh");
-    },
-    onReachBottom() {
-        let _this = this.$refs.list;
-        if (_this.pageNo * _this.pageSize < _this.total && !_this.loading) {
-            _this.loading = true;
-            _this.pageNo += 1;
-            _this.getList(_this.pageNo);
-        }
+        // #endif 
     },
     methods: {
         initScan() {
@@ -76,16 +64,18 @@ export default {
             main = plus.android.runtimeMainActivity(); //获取activity
             var IntentFilter = plus.android.importClass(
                 "android.content.IntentFilter"
-            );
+            ); 
             filter = new IntentFilter();
-            filter.addAction("android.intent.ACTION_DECODE_DATA"); // 换你的广播动作
+            filter.addAction("com.android.server.scannerservice.broadcast"); // 换你的广播动作 
+
             receiver = plus.android.implements(
                 "io.dcloud.feature.internal.reflect.BroadcastReceiver",
                 {
                     onReceive: function (context, intent) {
-                         console.log(111);
                         plus.android.importClass(intent);
-                        let code = intent.getStringExtra("barcode_string"); // 换你的广播标签
+                        let code = intent.getStringExtra("scannerdata"); // 换你的广播标签
+                        console.log('code', code);
+
                         _this.queryCode(code);
                     },
                 }
@@ -97,13 +87,12 @@ export default {
         stopScan() {
             main.unregisterReceiver(receiver);
         },
-        queryCode(code) {
-             
+        queryCode(code) { 
             this.getBycode(code);
         },
 
         scan() {
-          
+
             uni.scanCode({
                 success: (res) => {
                     this.getBycode(res.result);
@@ -112,77 +101,105 @@ export default {
         },
 
         getBycode(code) {
-            console.log(222);
+         
             if (this.codeQueryTag) return false;
-            this.codeQueryTag = true;
             if (!code.replace(/\s/g, "")) {
                 this.codeQueryTag = false;
                 return false;
             }
+            let index = this.list.findIndex(res => res.palletContainerNum == code)  
+            if (index != -1) {
+                index = index + 1;
+                uni.showToast({
+                    title: "单号已在列表第" + index + "行",
+                    duration: 1500,
+                    icon: "none",
+                });
+                return false
+            } 
+            this.codeQueryTag = true;
             this.number = code;
             uni.showLoading({
                 title: this.$t('loading'),
             });
             this.apifn({
-                url: "jeecg-boot/pda/api/v1/findChannelNameByCode",
+                url: "api/abroadDepot/checkRecord/incomingInspection",
                 method: "post",
                 data: {
-                    code: code,
+                    searchValue: code,
                 },
-            }).then(
-                (res) => {
-                    if (res.result) {
-                        let obj = {};
-                        obj.scanCode = code;
-                        obj.channelName = res.result.channelName;
-                        if (res.result.goodSize) {
-                            obj.update = true;
-                            obj = {
-                                ...obj,
-                                ...res.result.goodSize,
-                            };
-                        }
-                        uni.hideLoading();
-                        this.$store.commit("setputObj", obj);
-                        this.codeQueryTag = false;
-                        uni.navigateTo({
-                            url: "/pages/putAdd/putAdd",
-                        });
-                         this.playsucc()
-                    } else {
-                        this.codeQueryTag = false;
-                       
-                        this.playfail()
-                      
-                        uni.showToast({
-                            title: this.$t("put.err"),
-                            icon: "none",
-                        });
-                    }
-                },
+            }).then((res) => {
+                // console.log(res,'aaa');
+                if (res.code == 200) {
+                    this.list.push(res.data)
+                    this.number = ""
+                    this.playsucc()
+                } else {
+                    this.playfail()
+                }
+
+                this.codeQueryTag = false;
+                uni.hideLoading();
+            },
                 (err) => {
+                    this.playfail()
+                    uni.hideLoading();
                     this.codeQueryTag = false;
                 }
             );
         },
+        submit() {
+            if (!this.list.length) {
+                uni.showToast({
+                    title: this.$t('minLength'),
+                    icon: "none",
+                });
+                return
+            }
+            this.apifn({
+                url: "api/abroadDepot/checkRecord/chuku",
+                method: "post",
+                data: {
+                    searchValue: this.list.map(res => res.palletContainerNum).join(),
+                },
+            }).then(res => {
+                uni.showToast({
+                    title: res.msg,
+                    icon: "none",
+                });
+                this.list = []
+            }).catch(res => {
+                uni.showToast({
+                    title: res.msg,
+                    icon: "error",
+                });
+            })
+
+
+        },
+        del(index) {
+            this.list.splice(index, 1)
+        }
     },
 };
 </script>
 
-<style  lang='scss'>
+<style lang='scss'>
 .top-box {
     position: relative;
+    margin-top: 10px;
+
     /deep/ .is-input-border {
         border: unset !important;
     }
+
     /deep/ .uni-easyinput__content-input {
-        height: 103rpx;
+        height: 80rpx;
         background: #ffffff;
         font-size: 38rpx;
     }
-    /deep/.content-clear-icon {
-        padding-right: 160rpx !important;
-    }
+
+   
     image {
         width: 71.88rpx;
         position: absolute;
@@ -191,6 +208,7 @@ export default {
         transform: translate(0, -50%);
         z-index: 9;
     }
+
     .placeholder {
         font-size: 38rpx;
         font-weight: 500;
@@ -199,11 +217,60 @@ export default {
 }
 
 .list-title {
-    padding: 16rpx 0 16rpx 22rpx;
-    height: 36rpx;
-    line-height: 36rpx;
-    font-size: 38rpx;
-    font-weight: bold;
+    text-align: center;
     color: #3882ee;
+  
+    border-radius: 16rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    margin: 20rpx 10rpx;
+    background-color: white;
 }
+
+.content-box {
+    >view {
+    
+        background: #ffffff;
+        padding: 22rpx 16rpx 22rpx 30rpx;
+        margin-bottom: 12.5rpx;
+        margin-left: 10rpx;
+        margin-right: 10rpx;
+        border-radius: 16rpx;
+        box-shadow: 0px 0px 10rpx 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .cancel {
+        height: 74rpx;
+        background: #fa3534;
+        border-radius: 9rpx;
+        font-size: 38rpx;
+        font-weight: 400;
+        color: #ffffff;
+        margin-left: 10rpx;
+    }
+
+    .code {
+        color: #333333;
+        font-size: 42rpx;
+        margin-bottom: 10rpx;
+    }
+
+    .Customer_Number {
+        font-size: 36rpx;
+    }
+}
+
+.confirm {
+    width: 598rpx;
+    height: 84rpx;
+    background: #3882ee;
+    border-radius: 9rpx;
+    margin: 36rpx auto 0;
+    font-size: 47rpx;
+    line-height: 84rpx;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+
 </style>

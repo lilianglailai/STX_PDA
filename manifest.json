@@ -1,5 +1,5 @@
 {
-    "name" : "Entry Scanning",
+    "name" : "仓库练货",
     "appid" : "__UNI__B5626D4",
     "description" : "",
     "versionName" : "1.0.0",
@@ -87,24 +87,24 @@
                     }
                 }
             }
-        },
-        "nativePlugins" : {
-            "iData-UHFPlugin" : {
-                "__plugin_info__" : {
-                    "name" : "iData UHF插件",
-                    "description" : "实现了APP接收iData品牌UHF标签读取。",
-                    "platforms" : "Android",
-                    "url" : "",
-                    "android_package_name" : "",
-                    "ios_bundle_id" : "",
-                    "isCloud" : false,
-                    "bought" : -1,
-                    "pid" : "",
-                    "parameters" : {}
-                }
-            }
         }
     },
+    // "nativePlugins" : {
+    //     "iData-UHFPlugin" : {
+    //         "__plugin_info__" : {
+    //             "name" : "iData UHF插件",
+    //             "description" : "实现了APP接收iData品牌UHF标签读取。",
+    //             "platforms" : "Android",
+    //             "url" : "",
+    //             "android_package_name" : "",
+    //             "ios_bundle_id" : "",
+    //             "isCloud" : false,
+    //             "bought" : -1,
+    //             "pid" : "",
+    //             "parameters" : {}
+    //         }
+    //     }
+    // }
     /* 快应用特有相关 */
     "quickapp" : {},
     /* 小程序特有相关 */

@@ -1,24 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Layout</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* styles.css */
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      /* 允许项目换行 */
+      justify-content: flex-start;
+      /* 从上到下排列 */
+    }
+
+    .item {
+      background-color: #f0f0f0;
+      margin: 10px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      /* 包括边框和内边距在内的总宽度和高度 */
+      flex: 1 1 calc(50% - 22px);
+      /* 每个项目占50%宽度，减去2个10px的外边距和2个1px的边框 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    /* 确保在小屏幕上也能良好显示 */
+    @media (max-width: 600px) {
+      .item {
+        flex: 1 1 100%;
+        /* 每个项目占100%宽度 */
+      }
+    }
+  </style>
 </head>
+
 <body>
-    
+  <div class="container">
+    <div class="item">Item 1</div>
+    <div class="item">Item 2</div>
+    <div class="item">Item 3</div>
+    <div class="item">Item 4</div>
+    <div class="item">Item 5</div>
+    <div class="item">Item 6</div>
+  </div>
 </body>
-<script>
-   function cs() {
-        console.log(typeof name);
-   }
-   cs()
-  
-   let type="type"
-   let obj={
- 
-    type:"type"
-   }
-   console.log(obj[ obj.id||type]);
-</script>
+
 </html>

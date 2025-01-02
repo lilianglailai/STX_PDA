@@ -13,148 +13,72 @@
             }
         },
         {
+            "path": "pages/my/my",
+            "style": {
+                "navigationBarTitleText": "%my.title%",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/forecast/forecast",
+            "style": {
+                "navigationBarTitleText": "%forecast.receipt%"
+            }
+        },
+        {
+            "path": "pages/forecast/forecastList",
+            "style": {
+                "navigationBarTitleText": "%forecast.receipt%"
+            }
+        },
+        {
+            "path": "pages/forecast/forecastAdd",
+            "style": {
+                "navigationBarTitleText": "%forecast.packagedata%"
+            }
+        },
+        {
+            "path": "pages/temporarycounting/temporarycounting",
+            "style": {
+                "navigationBarTitleText": "%temporary.counting%"
+            }
+        },
+        {
+            "path": "pages/temporarycounting/temporarycountingAdd",
+            "style": {
+                "navigationBarTitleText": "%temporary.counting.add%"
+            }
+        },
+        {
+            "path": "pages/forecast/forecastLpn",
+            "style": {
+                "navigationBarTitleText": "lpn"
+            }
+        },
+        {
+            "path": "pages/forecast/forecastdetail",
+            "style": {
+                "navigationBarTitleText": "%forecast.receipt.detail%"
+            }
+        },
+        {
             "path": "pages/put/put",
             "style": {
-                "navigationStyle": "custom"
+                "navigationBarTitleText": "调拨入库"
             }
         },
         {
-            "path": "pages/putAdd/putAdd",
+            "path": "pages/put/putList",
             "style": {
-                "navigationStyle": "custom"
+                "navigationBarTitleText": "调拨入库详情"
             }
         },
         {
-            "path": "pages/set/set",
+            "path": "pages/put/putdetailList",
             "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/Handover/Handover",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/caPai/caPai",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/stuffing/stuffing",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/stuffing/stuffingDetail",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/stuffing/stuffingScan",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/caPai/signature/signature",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-       
-        {
-            "path": "pages/caPai/sign/sign",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/HandoverEdit/HandoverEdit",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/printerSetup/printerSetup",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/search/search",
-            "style" :
-            {
-                 
-                "navigationStyle": "custom"
-            }
-        
-        }, 
-        {
-            "path": "pages/printer/printer",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/deliveryOrder/deliveryOrder",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/password/password",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/out/out",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/out/vehicle/vehicle",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/out/vehicle/vehicle",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/out/vehicle/vehicle",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        }, 
-        {
-            "path": "pages/out/scan/scan",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
-            "path": "pages/check/check",
-            "style": {
-                "navigationStyle": "custom"
+                "navigationBarTitleText": "调拨入库详情"
             }
         }
-        ,
-        {
-            "path": "pages/cs/cs",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        } 
     ],
     "globalStyle": {
         "navigationBarTextStyle": "black",
@@ -163,14 +87,14 @@
         "backgroundColor": "#F8F8F8"
     },
     "uniIdRouter": {},
-	"condition" : { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
-			{
-				"name": "", //模式名称
-				"path": "", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
-			}
-		]
-	}
+    "condition": { //模式配置，仅开发期间生效
+        "current": 0, //当前激活的模式(list 的索引项)
+        "list": [
+            {
+                "name": "", //模式名称
+                "path": "", //启动页面，必选
+                "query": "" //启动参数，在页面的onLoad函数里面得到
+            }
+        ]
+    }
 }

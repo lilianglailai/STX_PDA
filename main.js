@@ -15,7 +15,9 @@ Vue.prototype.$store = store
  
   
 import navigation from "@/components/navigation/navigation.vue";
+import scan from "@/components/scan.vue";
 Vue.component('Navigation', navigation)
+Vue.component('scan', scan)
 
 import './uni.promisify.adaptor'
 Vue.config.productionTip = false

@@ -1,0 +1,72 @@
+{
+    "my.title":"个人中心",
+    "my.exit":"退出登录",
+    "forecast.receipt":"预报收货",
+    "forecast.receipt.detail":"预报收货详情",
+    "forecast.packagedata":"包裹数据",
+    "temporary.counting":"临时清点",
+    "temporary.counting.add":"临时清点编辑",
+    "numberDuplication": "单号已在列表第{num}行",
+    "cancel":"取消",
+    "Package_number":"包裹号",
+    "quantity":"件数",
+    "detail":"详情",
+    "viewdata":"查看数据",
+    "exit": "退出",
+    "submit":"提交",
+    "empty":"清空",
+    "update_password":"修改密码",
+    "update":"修改",
+    "search":"搜索",
+    "not_data":"暂无数据",
+    "loading":"正在加载中",
+    "please":"请输入{label}",
+    "select":"请选择{label}",
+    "weight":"重量",
+    "setup":"设置",
+    "record":"当日记录",
+    "succeed":"成功",
+    "err":"失败，请联系管理员",
+    "copy":"拷贝",
+    "minLength":"最少新增一条数据",
+    "language-change-confirm":"应用此设置将重启App",
+    "forecast":{
+        "container-number":"货箱号码",
+        "client":"客户",
+        "Temporary-stock-box":"暂存货箱",
+        "submit":"封满装箱",
+        "clientinconformity":"该包裹客户和当前货箱客户不一致"
+    },
+    "forecastLpn":{
+        "clientNum":"客户序号"
+    },
+     "home":{
+        "Storage-module":"入库模块"
+     },
+    "login":{
+        "username":"账号",
+        "password":"密码",
+        "login":"登陆"
+    },
+    "my":{
+        "warehouse":"所属仓库"
+    },
+    "lpn":{
+        "submit":"确定件数"
+    },
+    "put":{
+        "placeholder":"请输入或扫描号码",
+        "upload":"请上传包裹图片",
+        "err":"单号不存在",
+        "title":"扫码过线"
+    },
+    "forecastdetail":{
+        "customerNumber":"客户编码",
+        "packingTime":"装箱时间",
+        "accomplish_time":"封箱时间",
+        "code_scan_pack":"扫码装箱",
+        "emptyCase":"空箱"
+        
+    }
+    
+}

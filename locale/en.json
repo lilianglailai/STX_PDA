@@ -1,0 +1,65 @@
+ {
+    "my.title":"personal center",
+    "my.exit":"log out",
+    "forecast.receipt":"forecast receipt",
+    "forecast.receipt.detail":"forecast receipt detail", 
+    "temporary.counting":"temporary counting",
+    "temporary.counting.add":"temporary counting edit",
+    "exit": "exit",
+    "submit":"submit",
+    "update":"update",
+    "search":"search",
+    "not_data":"no data",
+    "loading":"loading",
+    "please":"please input {label}",
+    "select":"please select {label}",
+    "numberDuplication": "The tracking number is already on line {num} of the list",
+    "cancel":"cancel",
+    "Package_number":"Package_number",
+    "quantity":"quantity",
+    "detail":"detail",
+    "weight":"weight",
+    "empty":"empty",
+    "setup":"set",
+    "record":"Daily record",
+    "update_password":"change password",
+    "succeed":"succeed",
+    "copy":"copy",
+    "err":"Failed, please contact the administrator",
+    "minLength":"Submit at least one record",
+    "language-change-confirm": "Applying this setting will restart the app",
+    "forecast":{
+        "container-number":"container number",
+        "client":"client",
+        "Temporary-stock-box":"Temporary stock box",
+        "submit":"Full box"
+    },
+    "forecastLpn":{
+        "clientNum":"client Num"
+    },
+     "home":{
+        "Storage-module":"Storage module"
+     },
+    "login":{
+        "username":"username",
+        "password":"password",
+        "login":"login"
+    },
+    "my":{
+        "warehouse":"Owning warehouse"
+    },
+    "put":{
+        "placeholder":"Please enter or scan the bill number",
+        "upload":"Please upload the package picture",
+        "err":"tracking number does not exist"
+    },
+    "lpn":{
+        "submit":"Number of submissions"
+    },
+    "forecastdetail":{
+        "customerNumber":"customer Number",
+        "LoadingTime":"packing Time",
+        "accomplish_time":"accomplish time",
+        "code_scan_pack":"code scan pack"
+    }
+}

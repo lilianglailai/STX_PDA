@@ -10,7 +10,7 @@
                 v-model="number"
                 @confirm="getBycode(number)"
             />
-            <image src="/static/put/put.png" @click="scan" mode="widthFix" />
+            < src="/static/put/put.png" @click="scan" mode="widthFix" />
         </view>
         <picker-col ref="pickers"  @change="list=[]; getList()"></picker-col>
             <view v-if="list.length">
@@ -221,7 +221,7 @@ export default {
     /deep/.content-clear-icon {
         padding-right: 160rpx !important;
     }
-    image {
+     {
         width: 71.88rpx;
         position: absolute;
         right: 65.6rpx;

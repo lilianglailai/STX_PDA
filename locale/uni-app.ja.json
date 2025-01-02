@@ -1,0 +1,35 @@
+{
+    "common": {
+      "uni.app.quit": "もう一度アプリケーションを終了します",
+      "uni.async.error": "サーバーのタイムアウトに接続し、画面をクリックして試してみる",
+      "uni.showActionSheet.cancel": "キャンセル",
+      "uni.showToast.unpaired": "showtoastとhidetoastをペアにして使用する必要があることに注意してください",
+      "uni.showLoading.unpaired": "ショーロードとハイデロードをペアリングする必要があることに注意してください",
+      "uni.showModal.cancel": "キャンセル",
+      "uni.showModal.confirm": "もちろん",
+      "uni.chooseImage.cancel": "キャンセル",
+      "uni.chooseImage.sourceType.album": "アルバムから選択します",
+      "uni.chooseImage.sourceType.camera": "シュート",
+      "uni.chooseVideo.cancel": "キャンセル",
+      "uni.chooseVideo.sourceType.album": "アルバムから選択します",
+      "uni.chooseVideo.sourceType.camera": "シュート",
+      "uni.previewImage.cancel": "キャンセル",
+      "uni.previewImage.button.save": "画像を保存します",
+      "uni.previewImage.save.success": "画像をアルバムに正常に保存します",
+      "uni.previewImage.save.fail": "アルバムに画像を保存しました。失敗しました",
+      "uni.setClipboardData.success": "コンテンツがコピーされました",
+      "uni.scanCode.title": "コードをスキャンします",
+      "uni.scanCode.album": "アルバム",
+      "uni.scanCode.fail": "障害を特定します",
+      "uni.scanCode.flash.on": "タッチライト",
+      "uni.scanCode.flash.off": "触れてください",
+      "uni.startSoterAuthentication.authContent": "指紋認識で...",
+      "uni.picker.done": "仕上げる",
+      "uni.picker.cancel": "キャンセル",
+      "uni.video.danmu": "弾幕",
+      "uni.video.volume": "音量",
+      "uni.button.feedback.title": "フィードバック",
+      "uni.button.feedback.send": "送信"
+    }
+  }
+  

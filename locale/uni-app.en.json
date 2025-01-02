@@ -1,0 +1,35 @@
+{
+    "common": {
+      "uni.app.quit": "Exit the application again",
+      "uni.async.error": "Connect to the server timeout, click the screen to try it out",
+      "uni.showActionSheet.cancel": "Cancel",
+      "uni.showToast.unpaired": "Please note that Showtoast and HiDetoast must be paired and used",
+      "uni.showLoading.unpaired": "Please note that Showloading and Hideloading must be paired",
+      "uni.showModal.cancel": "Cancel",
+      "uni.showModal.confirm": "Sure",
+      "uni.chooseImage.cancel": "Cancel",
+      "uni.chooseImage.sourceType.album": "Select from album",
+      "uni.chooseImage.sourceType.camera": "Shoot",
+      "uni.chooseVideo.cancel": "Cancel",
+      "uni.chooseVideo.sourceType.album": "Select from album",
+      "uni.chooseVideo.sourceType.camera": "Shoot",
+      "uni.previewImage.cancel": "Cancel",
+      "uni.previewImage.button.save": "Save the image",
+      "uni.previewImage.save.success": "Save the image to the album successfully",
+      "uni.previewImage.save.fail": "Save the image to the album failed",
+      "uni.setClipboardData.success": "The content has been copied",
+      "uni.scanCode.title": "Scan the code",
+      "uni.scanCode.album": "Album",
+      "uni.scanCode.fail": "Identify failure",
+      "uni.scanCode.flash.on": "Touch light",
+      "uni.scanCode.flash.off": "Touch off",
+      "uni.startSoterAuthentication.authContent": "In fingerprint recognition ...",
+      "uni.picker.done": "Finish",
+      "uni.picker.cancel": "Cancel",
+      "uni.video.danmu": "Barrage",
+      "uni.video.volume": "volume",
+      "uni.button.feedback.title": "Feedback",
+      "uni.button.feedback.send": "send"
+    }
+  }
+  
