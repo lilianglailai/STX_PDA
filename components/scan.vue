@@ -1,8 +1,9 @@
 <template>
     <div class="app-box">
-        <view class="flex" style="margin: 0px 5px">
-            <uni-easyinput :focus="true" class="flex1 scan-input" type="text" :placeholder="placeholder||$t('put.placeholder')"
-                placeholder-class="placeholder" :value="value" @confirm="queryCode(value)" @input="$emit('input', $event)" />
+        <view class="flex" style="margin: 0 5px 20rpx 5px">
+            <uni-easyinput :focus="true" class="flex1 scan-input" type="text"
+                :placeholder="placeholder || $t('put.placeholder')" placeholder-class="placeholder" :value="value"
+                @confirm="queryCode(value)" @input="$emit('input', $event)" />
             <button class="scan-submit" @click="queryCode(value)">{{ $t('search') }}</button>
         </view>
     </div>
@@ -13,39 +14,23 @@ var main, receiver, filter;
 export default {
     name: 'scan',
     data() {
-        return {}
+        return {
+            main: ""
+        }
     },
-    props:{
+    props: {
         value: {
 
         },
-        placeholder:{
+        placeholder: {
 
         }
     },
-    // watch:{
-    //     number(value){
-    //         this.$emit('update:value',value)
-    //     }
-    // },
-    // onShow() {  
-    //     // #ifdef APP 
-    //     this.initScan();
-    //     this.startScan();
-    //     // #endif
-    // },
-    // onHide() {
-    //     console.log(9999);
-        
-    //     // #ifdef APP
-    //     this.stopScan();
-    //     // #endif
-    // },
-    // destroyed: function () {
-    //     // #ifdef APP 
-    //     this.stopScan();
-    //     // #endif 
-    // },
+    destroyed: function () {
+        // #ifdef APP 
+        this.stopScan();
+        // #endif 
+    },
     methods: {
         initScan() {
             let _this = this;
@@ -62,6 +47,8 @@ export default {
                     onReceive: function (context, intent) {
                         plus.android.importClass(intent);
                         let code = intent.getStringExtra("scannerdata"); // 换你的广播标签
+
+                        code = code.replace(/\n/g, "")
                         _this.$emit('input', code);
                         _this.queryCode(code);
                     },
@@ -74,15 +61,18 @@ export default {
         stopScan() {
             main.unregisterReceiver(receiver);
         },
-        queryCode(code) { 
-            this.$emit('scan',code)
+        queryCode(code) {
+            if (!code.replace(/\s/g, "")) {
+                return false;
+            }
+            this.$emit('scan', code)
         },
-      
+
     },
     created() {
         // #ifdef APP 
         this.initScan();
-        this.startScan();
+
         // #endif
 
     }
